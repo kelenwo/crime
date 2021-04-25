@@ -46,6 +46,11 @@ Class Crime_model Extends CI_model {
 }
 
   public function save_crime_report() {
-    
+    $query = $this->db->insert('crime_report',$this->input->post());
+    if($query) {
+      return true;
+    } else {
+  		return mysqli_error();
+  	}
   }
 }

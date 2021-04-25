@@ -18,10 +18,11 @@
  <script src="<?php echo base_url();?>template/assets/js/jquery.min.js"></script>
   <script src="<?php echo base_url();?>template/assets/js/custom_map.js"></script>
 
-  div id="head">
+
+  <div id="head">
     <div class="col-lg-12 col-md-12">
   <b>CRIME MAPPING SYSTEM</b>
-  <?php if($name): ?>
+  <?php if(isset($name)): ?>
   <b style="left: 80%;">{name} - <a href="<?php echo base_url();?>logout" style="color:#fcc;">Logout </a></b>
   <?php else: ?>
     <b style="left: 80%;"><a href="<?php echo base_url();?>login" style="color:#fff;">Login </a></b>
@@ -29,76 +30,79 @@
   </div>
   </div>
 
-  <div id="menu">
-    <div class="row">
-      <div class="col-lg-5 col-md-5">
-        <div class="col-auto" style="margin-left:-5%;">
-          <form id="search">
-          <label class="sr-only" for="inlineFormInputGroup">Search Crime, Location</label>
-          <div class="input-group mb-3">
-            <div class="input-group-prepend">
-              <span class="input-group-text input-group-custom">
-                <i class="fas fa-search"></i>
-              </span>
-            </div>
-            <input type="text" class="form-control input-group-custom" id="pac-input" placeholder="Search Crime, Location">
-            <span class="input-group-text input-group-custom" style="margin-left:-8px;">
-              <button type="button" id="submit" class="btn btn-primary">GO</button>
+<div id="menu">
+  <div class="row">
+    <div class="col-lg-5 col-md-5">
+      <div class="col-auto" style="margin-left:-5%;">
+        <form id="search">
+        <label class="sr-only" for="inlineFormInputGroup">Search Crime, Location</label>
+        <div class="input-group mb-3">
+          <div class="input-group-prepend">
+            <span class="input-group-text input-group-custom">
+              <i class="fas fa-search"></i>
             </span>
           </div>
+          <input type="text" class="form-control input-group-custom" id="pac-inpu" placeholder="Search Crime, Location">
+          <span class="input-group-text input-group-custom" style="margin-left:-8px;">
+            <button type="button" id="submit" class="btn btn-primary">GO</button>
+          </span>
         </div>
       </div>
-      <div class="col-lg-7 col-md-7">
-        <div class="omenu ml-15">
-          <span>
-        <button type="button" class="btn btn-primary">20 records</button></span>
-        <span class="mt-"><small>Date Range:</small> <a href="">Yesterday</a></span>
-        <span class="mt-1"><i class="fab fa-filter"></i> Filter</span>
-      </div>
-      </div>
+    </div>
+    <div class="col-lg-7 col-md-7">
+      <div class="omenu ml-15">
+        <span>
+      <button type="button" class="btn btn-primary">20 records</button></span>
+      <span class="mt-"><small>Date Range:</small> <a href="">Yesterday</a></span>
+      <span class="mt-1"><i class="fab fa-filter"></i> Filter</span>
+    </div>
     </div>
   </div>
-  </form>
-  <div class="container-fluid text-center">
-  <div id="side">
-    <ul class="nav flex-column nav-custom">
-      <li class="nav-item">
-        <a class="nav-link active" href="#">
-          <img class="logo" src="<?php echo base_url();?>template/assets/uniuyo.png"></img></a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link active" href="#">
-          <i class="fas fa-home"></i><br>
-          Home</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="<?php echo base_url();?>home/ongoing_crimes">
-            <i class="fas fa-bell"></i><br>
-            Ongoing Crimes</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#">
-            <i class="far fa-file-export"></i><br>
-            Generate Report</a>
-      </li>
-      <?php if($rights=='admin'):?>
-      <li class="nav-item">
-        <a class="nav-link" href="#">
-            <i class="fas fa-user-shield"></i><br>
-            Administrator</a>
-      </li>
-    <?php endif;?>
+</div>
+</form>
 
-    <?php if(empty($name)):?>
+<div class="container-fluid text-center">
+<div id="side">
+  <ul class="nav flex-column nav-custom">
     <li class="nav-item">
-      <a class="nav-link disabled" href="#">
-          <i class="fas fa-user"></i><br>
-          Login</a>
+      <a class="nav-link active" href="#">
+        <img class="logo" src="<?php echo base_url();?>template/assets/uniuyo.png"></img></a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link active" href="#">
+        <i class="fas fa-home"></i><br>
+        Home</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="<?php echo base_url();?>home/ongoing_crimes">
+          <i class="fas fa-bell"></i><br>
+          Ongoing Crimes</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="#">
+          <i class="far fa-file-export"></i><br>
+          Generate Report</a>
+    </li>
+      <?php if(isset($name)):?>
+    <?php if($rights=='admin'):?>
+    <li class="nav-item">
+      <a class="nav-link" href="#">
+          <i class="fas fa-user-shield"></i><br>
+          Administrator</a>
     </li>
   <?php endif;?>
-    </ul>
-  </div>
-  </div>
+<?php endif;?>
+
+  <?php if(!isset($name)):?>
+  <li class="nav-item">
+    <a class="nav-link disabled" href="#">
+        <i class="fas fa-user"></i><br>
+        Login</a>
+  </li>
+<?php endif;?>
+  </ul>
+</div>
+</div>
 
 
 <div id="main-body">
@@ -107,39 +111,75 @@
     <h4 style="display:inline-block;">Report Crime &nbsp;
       |&nbsp;&nbsp;</h4><h4 style="display:inline-block;"><a href="<?php echo base_url();?>home/crime_reports">Your reports</a></h4>
   </div>
+  <form id="form">
   <div class="panel-body">
     <div class="col-md-10">
     <div class="form-group">
       <label for="type">Location</label>
-      <input type="text" class="form-control" id="pac-input" placeholder="Crime Scene">
+      <input type="text" name="location" class="form-control" id="pac-input" placeholder="Crime Scene" required>
     </div>
   </div>
+  <input type="hidden" name="status" value="active">
+  <input type="hidden" name="report_by" value="{email}">
+  <input type="hidden" name="date" value="<?php echo date('d-m-Y');?>">
+  <input type="hidden" name="time" value="<?php echo time();?>">
       <div class="col-md-10">
       <div class="form-group">
         <label for="type">Type</label>
-        <select class="form-control" id="pac-inp">
-          <option value="">Arson</option>
-          <option value="">Robbery</option>
-          <option value="">Murder</option>
+        <select class="form-control" name="type" id="type" required>
+          <option value="Arson">Assault</option>
+          <option value="Exam Malpractice">Exam Malpractice</option>
+          <option value="Sex Crime">Sex Crime</option>
+          <option value="Drugs/Alcohol Violation">Drugs/Alcohol Violation</option>
+          <option value="Robbery">Robbery</option>
+          <option value="Murder">Murder</option>
         </select>
       </div>
   </div>
+  
   <div class="col-md-10">
   <div class="form-group">
     <label for="type">Description</label>
-    <textarea class="form-control" id="pac-inp" rows="4">
+    <textarea class="form-control" name="description" id="pac-inp" rows="4" required>
     </textarea>
   </div>
 </div>
+
   <div class="col-md-10">
   <div class="form-group">
-  <button type="button" class="btn btn-primary">&nbsp;&nbsp;&nbsp;Submit&nbsp;<&nbsp;&nbsp;</button>
+  <button type="button" id="report" class="btn btn-primary">&nbsp;&nbsp;&nbsp;Submit&nbsp;<i id="loading" class="fas fa-cog fa-spin"></i> &nbsp;&nbsp;</button>
   </div>
 </div>
+</form>
 
 <div id="map" style="display:none;"></div>
 </div>
 </div>
 <script async
     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAj5lKUoRNwRa0maEalb4F-ATTiNzSwK1g&libraries=places&callback=initMap">
+</script>
+<script>
+$(document).ready(function() {
+$('#loading').hide();
+
+$('#report').on('click',function() {
+$('#loading').show();
+$.ajax({
+url: '<?php echo base_url('save_crime_report');?>',
+data: $('#form').serialize(),
+type: 'POST',
+success:function(data) {
+$('#loading').hide();
+if(data !=='true') {
+  alert(data);
+}
+else if(data=='true') {
+  alert('Your report has been logged successfully');
+  window.location.href = '<?php echo base_url('crime_reports');?>';
+}
+}
+});
+});
+
+});
 </script>

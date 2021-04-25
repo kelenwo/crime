@@ -79,9 +79,9 @@
   <div class="panel-body">
 
 
+</div>
+</div>
 <div id="map" style="display:none;"></div>
-</div>
-</div>
 <script async
     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAj5lKUoRNwRa0maEalb4F-ATTiNzSwK1g&libraries=places&callback=initMap">
 </script>

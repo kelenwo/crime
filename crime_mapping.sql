@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Apr 24, 2021 at 09:01 PM
+-- Generation Time: Apr 25, 2021 at 12:07 PM
 -- Server version: 5.7.31
 -- PHP Version: 7.3.21
 
@@ -35,10 +35,17 @@ CREATE TABLE IF NOT EXISTS `crime_report` (
   `location` varchar(256) COLLATE utf8_bin NOT NULL,
   `report_by` varchar(70) COLLATE utf8_bin NOT NULL,
   `status` varchar(20) COLLATE utf8_bin NOT NULL,
-  `date` date NOT NULL,
+  `date` varchar(70) COLLATE utf8_bin NOT NULL,
   `time` time NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+--
+-- Dumping data for table `crime_report`
+--
+
+INSERT INTO `crime_report` (`id`, `type`, `description`, `location`, `report_by`, `status`, `date`, `time`) VALUES
+(2, 'Exam Malpractice', '    A student was caught cheating', 'Faculty of Science, University of Uyo Main Campus, Offot 11, Uyo, Nigeria', 'kelenwo68@gmail.com', 'active', '25-04-2021', '838:59:59');
 
 -- --------------------------------------------------------
 

@@ -3,7 +3,7 @@ class Home extends CI_Controller {
 
         public function index()
         {
-          $data = $this->session->userdata();
+             $data = $this->session->userdata();
              $data['title'] = "CRIME MAPPING SYSTEM";
                 // $this->load->view('head', $data);
                 $this->parser->parse('index', $data);
@@ -25,6 +25,7 @@ class Home extends CI_Controller {
 
         public function report_crime()
         {
+              $data = $this->session->userdata();
              $data['title'] = "REPORT CRIME- CRIME MAPPING SYSTEM";
                 // $this->load->view('head', $data);
                 $this->parser->parse('report_crime', $data);
@@ -75,4 +76,15 @@ class Home extends CI_Controller {
           }
 
         }
+
+        public function save_crime_report() {
+            $data = $this->crime_model->save_crime_report();
+            if($data==true) {
+            echo 'true';
+          } else {
+            echo $data;
+          }
+
+          }
+
       }

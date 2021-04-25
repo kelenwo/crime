@@ -21,7 +21,7 @@
 <div id="head">
   <div class="col-lg-12 col-md-12">
 <b>CRIME MAPPING SYSTEM</b>
-<?php if($name): ?>
+<?php if(isset($name)): ?>
 <b style="left: 80%;">{name} - <a href="<?php echo base_url();?>logout" style="color:#fcc;">Logout </a></b>
 <?php else: ?>
   <b style="left: 80%;"><a href="<?php echo base_url();?>login" style="color:#fff;">Login </a></b>
@@ -81,6 +81,7 @@
           <i class="far fa-file-export"></i><br>
           Generate Report</a>
     </li>
+      <?php if(isset($name)):?>
     <?php if($rights=='admin'):?>
     <li class="nav-item">
       <a class="nav-link" href="#">
@@ -88,8 +89,9 @@
           Administrator</a>
     </li>
   <?php endif;?>
+<?php endif;?>
 
-  <?php if(empty($name)):?>
+  <?php if(!isset($name)):?>
   <li class="nav-item">
     <a class="nav-link disabled" href="#">
         <i class="fas fa-user"></i><br>
