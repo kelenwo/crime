@@ -44,4 +44,8 @@ Class Crime_model Extends CI_model {
 		return mysqli_error();
 	}
 }
+
+  public function save_crime_report() {
+    
+  }
 }
