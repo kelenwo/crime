@@ -1,12 +1,21 @@
 <?php
-class Home extends CI_Controller {
+class Dashboard extends CI_Controller {
 
         public function index()
         {
              $data = $this->session->userdata();
              $data['title'] = "CRIME MAPPING SYSTEM";
                 // $this->load->view('head', $data);
-                $this->parser->parse('index', $data);
+                $this->parser->parse('user_index', $data);
+
+        }
+
+        public function crime_review()
+        {
+             $data = $this->session->userdata();
+             $data['title'] = "CRIME MAPPING SYSTEM";
+                // $this->load->view('head', $data);
+                $this->parser->parse('user_review_post', $data);
 
         }
         public function crime_search($location)

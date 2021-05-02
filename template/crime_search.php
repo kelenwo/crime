@@ -16,62 +16,62 @@
   </head>
  <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
  <script src="<?php echo base_url();?>template/assets/js/jquery.min.js"></script>
- <script src="<?php echo base_url();?>template/assets/js/bootstrap.bundle.min.js"></script>
-
- <div id="head">
-   <div class="col-lg-12 col-md-12 row">
-     <div class="col-lg-8 col-md-8">
- <b>CRIME MAPPING SYSTEM</b>
- </div> <div class="col-lg-4 col-md-4">
- <?php if(isset($name)): ?>
- <b style="float: right;">{name} - <a href="<?php echo base_url();?>logout" style="color:#fcc;">Logout </a></b>
- <?php else: ?>
-   <b style="float:right;"><a href="<?php echo base_url();?>login" style="color:#fff;">Login </a></b>
- <?php endif;?>
- </div>
- </div>
- </div>
+<div id="head">
+  <div class="col-lg-12 col-md-12 row">
+    <div class="col-lg-8 col-md-8">
+<b>CRIME MAPPING SYSTEM</b>
+</div> <div class="col-lg-4 col-md-4">
+<?php if(isset($name)): ?>
+<b style="float: right;">{name} - <a href="<?php echo base_url();?>logout" style="color:#fcc;">Logout </a></b>
+<?php else: ?>
+  <b style="float:right;"><a href="<?php echo base_url();?>login" style="color:#fff;">Login </a></b>
+<?php endif;?>
+</div>
+</div>
+</div>
 
 <div id="menu">
-  <nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <a class="navbar-brand" href="#">Navbar</a>
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
-
-  <div class="collapse navbar-collapse" id="navbarSupportedContent">
-    <ul class="navbar-nav mr-auto">
-      <li class="nav-item active">
-        <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#">Link</a>
-      </li>
-      <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          Dropdown
-        </a>
-        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-          <a class="dropdown-item" href="#">Action</a>
-          <a class="dropdown-item" href="#">Another action</a>
-          <div class="dropdown-divider"></div>
-          <a class="dropdown-item" href="#">Something else here</a>
+  <div class="row">
+    <div class="col-lg-5 col-md-5">
+      <div class="col-auto" style="margin-left:-5%;">
+        <form id="search_crime_reports">
+        <label class="sr-only" for="inlineFormInputGroup">Search Crime, Location</label>
+        <div class="input-group mb-3">
+          <div class="input-group-prepend">
+            <span class="input-group-text input-group-custom">
+              <i class="fas fa-search"></i>
+            </span>
+          </div>
+          <input type="text" name="location" class="form-control input-group-custom" id="pac-input" placeholder="Search Crime, Location"
+          <?php if($addr):?> value="{addr}" <?php endif;?>>
+          <span class="input-group-text input-group-custom" style="margin-left:-8px;">
+            <button type="button" id="go" class="btn btn-primary">GO  <i id="loading" class="fas fa-spinner fa-spin"></i></button>
+          </span>
         </div>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link disabled" href="#">Disabled</a>
-      </li>
-    </ul>
-    <form class="form-inline my-2 my-lg-0">
-      <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-    </form>
+      </div>
+    </div>
+    <div class="col-lg-7 col-md-7">
+      <div class="omenu ml-15">
+        <span>
+          <?php if($records==false) {
+            $text = '0 Record';
+          } else {
+            $total = count($records);
+            if($total > 1) {
+            $text = $total. '&nbsp; Records';
+          } else {
+            $text = $total. '&nbsp; Record';
+          }
+          } ?>
+      <button type="button" class="btn btn-primary"><div id="records"><?php echo $text;?></div> <i id="loading-record" class="fas fa-spinner fa-spin"></i></button></span>
+      <span class="mt-"><small>Date Range:</small> <a style="color:#383192;" id="sort-by-date">Yesterday</a></span>
+      <span class="mt-1"><a id="filter" style="color:#383192;"><i class="fas fa-filter"></i> Filter</a></span>
+    </div>
+    </div>
   </div>
-</nav>
-
 </div>
 </form>
-<div class="text-center">
+<div class="container-fluid text-center">
 <div id="side">
   <ul class="nav flex-column nav-custom">
     <li class="nav-item">
@@ -93,11 +93,6 @@
           <i class="far fa-file-export"></i><br>
           Generate Report</a>
     </li>
-    <li class="nav-item">
-      <a class="nav-link" href="<?php echo base_url('crime_reports');?>">
-          <i class="far fa-file-export"></i><br>
-          Crime Reports</a>
-    </li>
       <?php if(isset($name)):?>
     <?php if($rights=='admin'):?>
     <li class="nav-item">
@@ -118,61 +113,51 @@
   </ul>
 </div>
 </div>
-
-<div id="main-body" class="container">
+<div id="results"></div>
+<div id="main-body">
+  <div class="row">
+  <input type="hidden" id="addr" value="{addr}">
 <div id="map"></div>
+</div>
 </div>
 <script async
     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAj5lKUoRNwRa0maEalb4F-ATTiNzSwK1g&libraries=places&callback=initMap">
 </script>
+<div id="reload">
 <script>
+$(document).ready(function(){
+  $('#loading-record').hide();
+  $('#loading').hide();
 
+  //Trigger the search
+  $('#go').on('click', function() {
+    $('#loading-record').show();
+    $('#loading').show();
 
-function get_result() {
-  $.ajax({
-  url: '<?php echo base_url('home/get_crimes');?>',
-  type: 'GET',
-  dataType: 'JSON',
-  success:function(crimes) {
-   for (i = 0; i < crimes.length; i++) {
-const request = {
-  query: crimes[i].location,
-  fields: ["name", "geometry"],
-};
-
-service = new google.maps.places.PlacesService(map);
-service.findPlaceFromQuery(request, (results, status) => {
-  if (status === google.maps.places.PlacesServiceStatus.OK && results) {
-    for (let i = 0; i < results.length; i++) {
-      var place = results[i];
-      if (!place.geometry || !place.geometry.location) return;
-      const marker = new google.maps.Marker({
-        map,
-        position: place.geometry.location,
-        animation: google.maps.Animation.DROP,
-        label: {
-  fontWeight: 'bold',
-  color: 'white',
-  text: 'C',
-},
-      });
-      marker.addListener("click", () => {
-        window.location.href = place.location;
-        map.setCenter(marker.getPosition());
-      });
-      google.maps.event.addListener(marker, "click", toggleBounce, () => {
-        infowindow.setContent(place.name || "");
-        infowindow.open(map);
-      });
-
+    $.ajax({
+    url: '<?php echo base_url('home/search_crime_reports');?>',
+    data: $('#search_crime_reports').serialize(),
+    type: 'POST',
+    dataType: 'JSON',
+    success:function(data) {
+    $('#loading-record').hide();
+    $('#loading').hide();
+        if(data=='false') {
+    $('#records').html('0 Record');
+  } else {
+    var len = data.length;
+    if(len>1) {
+      $('#records').html(len+ '&nbsp;Records');
+    } else if(len=1) {
+        $('#records').html(len+ '&nbsp;Record');
+      }
     }
-    map.setCenter(results[0].geometry.location);
   }
+    });
+  });
+
 });
-}
-}
-});
-}
+
 function initAutocomplete() {
 
   // Create the search box and link it to the UI element.
@@ -266,6 +251,7 @@ let map;
 let service;
 let infowindow;
 
+
 function initMap() {
   const home = new google.maps.LatLng(5.028829, 7.978997);
   infowindow = new google.maps.InfoWindow();
@@ -273,52 +259,37 @@ function initMap() {
     center: home,
     zoom: 15,
   });
-get_result();
- map.setOptions({ styles: styles["hide"] });
-    google.maps.event.addDomListener(window, 'load', initAutocomplete);
+  const request = {
+    query: $('#addr').val(),
+    fields: ["name", "geometry"],
+  };
+  service = new google.maps.places.PlacesService(map);
+  service.findPlaceFromQuery(request, (results, status) => {
+    if (status === google.maps.places.PlacesServiceStatus.OK && results) {
+      for (let i = 0; i < results.length; i++) {
+        createMarker(results[i]);
+      }
+      map.setCenter(results[0].geometry.location);
+    }
+  });
+
+  google.maps.event.addDomListener(window, 'load', initAutocomplete);
   $('#submit').on('click',function() {
 buttonSearch();
   });
-
 }
-const styles = {
-  default: [],
-  hide: [
-    {
-      featureType: "all",
-      elementType: "labels.icon",
-      stylers: [{ visibility: "on" }],
-    },
-    {
-      featureType: "all",
-      elementType: "labels.text",
-      stylers: [{ visibility: "on" }],
-    },
-  ],
-};
 
 function createMarker(place) {
   if (!place.geometry || !place.geometry.location) return;
   const marker = new google.maps.Marker({
     map,
     position: place.geometry.location,
-    animation: google.maps.Animation.DROP,
   });
-
-  google.maps.event.addListener(marker, "click", toggleBounce, () => {
+  google.maps.event.addListener(marker, "click", () => {
     infowindow.setContent(place.name || "");
     infowindow.open(map);
   });
-
-
 }
 
-
-function toggleBounce() {
-  if (marker.getAnimation() !== null) {
-    marker.setAnimation(null);
-  } else {
-    marker.setAnimation(google.maps.Animation.BOUNCE);
-  }
-}
 </script>
+</div>

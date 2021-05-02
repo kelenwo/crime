@@ -19,26 +19,47 @@
   <script src="<?php echo base_url();?>template/assets/js/custom_map.js"></script>
 
 
-<div id="head">
-<b>CRIME MAPPING SYSTEM</b>
-</div>
+  <div id="head">
+    <div class="col-lg-12 col-md-12 row">
+      <div class="col-lg-8 col-md-8">
+  <b>CRIME MAPPING SYSTEM</b>
+  </div> <div class="col-lg-4 col-md-4">
+  <?php if(isset($name)): ?>
+  <b style="float: right;">{name} - <a href="<?php echo base_url();?>logout" style="color:#fcc;">Logout </a></b>
+  <?php else: ?>
+    <b style="float:right;"><a href="<?php echo base_url();?>login" style="color:#fff;">Login </a></b>
+  <?php endif;?>
+  </div>
+  </div>
+  </div>
 
 <div id="menu">
   <div class="row">
     <div class="col-lg-5 col-md-5">
       <div class="col-auto" style="margin-left:-5%;">
-
-
+        <form id="search" method="post" action="<?php echo base_url('home/crime_search/location');?>">
+        <label class="sr-only" for="inlineFormInputGroup">Search Crime, Location</label>
+        <div class="input-group mb-3">
+          <div class="input-group-prepend">
+            <span class="input-group-text input-group-custom">
+              <i class="fas fa-search"></i>
+            </span>
+          </div>
+          <input type="text" name="location" class="form-control input-group-custom" id="pac-input" placeholder="Search Crime, Location">
+          <span class="input-group-text input-group-custom" style="margin-left:-8px;">
+            <button type="submit" id="submit" class="btn btn-primary">GO</button>
+          </span>
+        </div>
       </div>
     </div>
     <div class="col-lg-7 col-md-7">
-      <div class="omenu ml-" style="float: right; margin-right:20px;">
-      <span class="mt-1"><i class="fab fa-filter"></i> Hello, John</span>
+      <div class="omenu ml-15">
+        <span></span>
     </div>
     </div>
   </div>
 </div>
-
+</form>
 <div class="container-fluid text-center">
 <div id="side">
   <ul class="nav flex-column nav-custom">
@@ -73,11 +94,40 @@
 <div id="main-body">
 <div class="panel">
   <div class="panel-heading">
-    <h4 style="display:inline-block;">Report Crime &nbsp;
-      |&nbsp;&nbsp;</h4><h4 style="display:inline-block;"><a href="">Your reports</a></h4>
+    <h4 style="display:inline-block;">YOUR REPORTS &nbsp;
+      |&nbsp;&nbsp;</h4><h4 style="display:inline-block;"><a href="<?php echo base_url();?>report_crime">Report Crime</a></h4>
   </div>
   <div class="panel-body">
+    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+  <thead>
+  <tr>
+    <th>#</th>
+    <th>Type</th>
+    <th>Description</th>
+    <th>Scene</th>
+    <th>Date</th>
+    <th>Time</th>
+  </tr>
+  </thead>
+  <tbody>
+<?php if($reports==false): ?>
+  <tr><td colspan="7"><h4 class="text-center">NO DATA TO DISPLAY</h4></td></tr>
+<?php else: $i = 1;?>
+<?php  foreach($reports as $req): ?>
+<tr>
+<td><?php echo $i++.'.';?>
+<td><a href="#viewreport-<?php echo $req['id'];?>" data-toggle="modal"><?php echo $req['type']; ?></a></td>
+<td><?php echo $req['description']; ?></td>
+  <td><?php echo $req['location']; ?></td>
+  <td><?php echo date("d F Y", strtotime($req['date']));?></td>
+<td><?php echo date("h:g:s A", strtotime($req['time']));?></td>
 
+<!-- delete contract -->
+</tr>
+<?php endforeach;?>
+<?php endif;?>
+</tbody>
+</table>
 
 </div>
 </div>

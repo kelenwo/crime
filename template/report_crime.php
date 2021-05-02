@@ -20,46 +20,46 @@
 
 
   <div id="head">
-    <div class="col-lg-12 col-md-12">
+    <div class="col-lg-12 col-md-12 row">
+      <div class="col-lg-8 col-md-8">
   <b>CRIME MAPPING SYSTEM</b>
+  </div> <div class="col-lg-4 col-md-4">
   <?php if(isset($name)): ?>
-  <b style="left: 80%;">{name} - <a href="<?php echo base_url();?>logout" style="color:#fcc;">Logout </a></b>
+  <b style="float: right;">{name} - <a href="<?php echo base_url();?>logout" style="color:#fcc;">Logout </a></b>
   <?php else: ?>
-    <b style="left: 80%;"><a href="<?php echo base_url();?>login" style="color:#fff;">Login </a></b>
+    <b style="float:right;"><a href="<?php echo base_url();?>login" style="color:#fff;">Login </a></b>
   <?php endif;?>
   </div>
   </div>
+  </div>
 
-<div id="menu">
-  <div class="row">
-    <div class="col-lg-5 col-md-5">
-      <div class="col-auto" style="margin-left:-5%;">
-        <form id="search">
-        <label class="sr-only" for="inlineFormInputGroup">Search Crime, Location</label>
-        <div class="input-group mb-3">
-          <div class="input-group-prepend">
-            <span class="input-group-text input-group-custom">
-              <i class="fas fa-search"></i>
+  <div id="menu">
+    <div class="row">
+      <div class="col-lg-5 col-md-5">
+        <div class="col-auto" style="margin-left:-5%;">
+          <form id="search" method="post" action="<?php echo base_url('home/crime_search/location');?>">
+          <label class="sr-only" for="inlineFormInputGroup">Search Crime, Location</label>
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text input-group-custom">
+                <i class="fas fa-search"></i>
+              </span>
+            </div>
+            <input type="text" name="location" class="form-control input-group-custom" id="pac-inpu" placeholder="Search Crime, Location">
+            <span class="input-group-text input-group-custom" style="margin-left:-8px;">
+              <button type="submit" id="submit" class="btn btn-primary">GO</button>
             </span>
           </div>
-          <input type="text" class="form-control input-group-custom" id="pac-inpu" placeholder="Search Crime, Location">
-          <span class="input-group-text input-group-custom" style="margin-left:-8px;">
-            <button type="button" id="submit" class="btn btn-primary">GO</button>
-          </span>
         </div>
       </div>
-    </div>
-    <div class="col-lg-7 col-md-7">
-      <div class="omenu ml-15">
-        <span>
-      <button type="button" class="btn btn-primary">20 records</button></span>
-      <span class="mt-"><small>Date Range:</small> <a href="">Yesterday</a></span>
-      <span class="mt-1"><i class="fab fa-filter"></i> Filter</span>
-    </div>
+      <div class="col-lg-7 col-md-7">
+        <div class="omenu ml-15">
+          <span></span>
+      </div>
+      </div>
     </div>
   </div>
-</div>
-</form>
+  </form>
 
 <div class="container-fluid text-center">
 <div id="side">
@@ -88,7 +88,9 @@
     <li class="nav-item">
       <a class="nav-link" href="#">
           <i class="fas fa-user-shield"></i><br>
-          Administrator</a>
+          Administrator
+210428-214IYF
+        </a>
     </li>
   <?php endif;?>
 <?php endif;?>
@@ -120,7 +122,7 @@
     </div>
   </div>
   <input type="hidden" name="status" value="active">
-  <input type="hidden" name="report_by" value="{email}">
+  <input type="hidden" name="report_by" value="{name}">
   <input type="hidden" name="date" value="<?php echo date('d-m-Y');?>">
   <input type="hidden" name="time" value="<?php echo time();?>">
       <div class="col-md-10">
@@ -136,7 +138,7 @@
         </select>
       </div>
   </div>
-  
+
   <div class="col-md-10">
   <div class="form-group">
     <label for="type">Description</label>
