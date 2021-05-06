@@ -21,10 +21,28 @@ Class Crime_model Extends CI_model {
       return $query->result_array();
     }
 
+    public function get_crime_reports_all() {
+      $query = $this->db->get('crime_report');
+      return $query->result_array();
+    }
+
     public function get_crimes() {
       $this->db->select('location');
       $query = $this->db->get('crime_report');
       return $query->result_array();
+    }
+
+    public function get_map_data() {
+      $this->db->select('blocks');
+      $query = $this->db->get('map_data');
+      return $query->result_array();
+    }
+
+    public function get_map_data_where($var) {
+        $this->db->like('blocks',$var);
+      $this->db->select('*');
+      $query = $this->db->get('map_data');
+      return $query->row();
     }
 
     public function password_check() {
@@ -65,6 +83,14 @@ Class Crime_model Extends CI_model {
     } else {
   		return mysqli_error();
   	}
+  }
+  public function save_map_data() {
+    $query = $this->db->insert('map_data',$this->input->post());
+    if($query) {
+      return true;
+    } else {
+      return mysqli_error();
+    }
   }
 
   public function search_crimes() {

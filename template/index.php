@@ -12,10 +12,11 @@
   <title>{title}</title>
   <link href="<?php echo base_url();?>template/assets/css/main.css" rel="stylesheet">
   <link href="<?php echo base_url();?>template/assets/css/bootstrap.css" rel="stylesheet">
-  <link href="<?php echo base_url();?>template/assets/css/all.css" rel="stylesheet">
+<link href="<?php echo base_url();?>template/assets/css/all.css" rel="stylesheet">
   </head>
  <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
  <script src="<?php echo base_url();?>template/assets/js/jquery.min.js"></script>
+  <script src="<?php echo base_url();?>template/assets/js/autocomplete.js"></script>
  <script src="<?php echo base_url();?>template/assets/js/bootstrap.bundle.min.js"></script>
 
  <div id="head">
@@ -32,45 +33,45 @@
  </div>
  </div>
 
-<div id="menu">
-  <nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <a class="navbar-brand" href="#">Navbar</a>
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
 
-  <div class="collapse navbar-collapse" id="navbarSupportedContent">
-    <ul class="navbar-nav mr-auto">
-      <li class="nav-item active">
-        <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#">Link</a>
-      </li>
-      <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          Dropdown
-        </a>
-        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-          <a class="dropdown-item" href="#">Action</a>
-          <a class="dropdown-item" href="#">Another action</a>
-          <div class="dropdown-divider"></div>
-          <a class="dropdown-item" href="#">Something else here</a>
-        </div>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link disabled" href="#">Disabled</a>
-      </li>
-    </ul>
-    <form class="form-inline my-2 my-lg-0">
-      <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-    </form>
-  </div>
-</nav>
+ <div id="menu">
+   <div class="row">
+     <div class="col-lg-5 col-md-5">
+       <div class="col-auto" style="margin-left:0;">
+         <form id="search_crime_reports" autocomplete="off">
+         <label class="sr-only" for="inlineFormInputGroup">Search Crime, Location</label>
+         <div class="input-group mb-3 autocomplete">
+           <div class="input-group-prepend">
+             <span class="input-group-text input-group-custom">
+               <i class="fas fa-search"></i>
+             </span>
+           </div>
+           <input type="text" name="location" class="form-control input-group-custom" id="location" placeholder="Search Crime, Location">
+           <span class="input-group-text input-group-custom" style="margin-left:-8px;">
+             <button type="button" id="go" class="btn btn-primary">GO  <i id="loading" class="fas fa-spinner fa-spin"></i></button>
+           </span>
+         </div>
+       </div>
 
-</div>
-</form>
+     </div>
+     <div class="col-lg-7 col-md-7">
+       <div class="omenu ml-15">
+         <span>
+       <button type="button" class="btn btn-primary"><div id="records">0 Records</div> <i id="loading-record" class="fas fa-spinner fa-spin"></i></button></span>
+       <span class="mt-"><small>Date Range:</small>
+            <a class="m" style="color:#383192;" id="sort-by-date" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Yesterday</a>
+           <div class="dropdown-menu" aria-labelledby="sort-by-date">
+             <a class="dropdown-item" href="#">Action</a>
+             <a class="dropdown-item" href="#">Another action</a>
+             <a class="dropdown-item" href="#">Something else here</a>
+           </div>
+         </span>
+       <span class="mt-1"><a id="filter" style="color:#383192;"><i class="fas fa-filter"></i> Filter</a></span>
+     </div>
+     </div>
+   </div>
+ </div>
+ </form>
 <div class="text-center">
 <div id="side">
   <ul class="nav flex-column nav-custom">
@@ -79,7 +80,7 @@
         <img class="logo" src="<?php echo base_url();?>template/assets/uniuyo.png"></img></a>
     </li>
     <li class="nav-item">
-      <a class="nav-link active" href="#">
+      <a class="nav-link active" href="<?php echo base_url();?>home/index">
         <i class="fas fa-home"></i><br>
         Home</a>
     </li>
@@ -122,144 +123,119 @@
 <div id="main-body" class="container">
 <div id="map"></div>
 </div>
+
+<input type="hidden" id="lat" >
+<input type="hidden" id="long">
+<button id="ref" type="button" style="display:none"></button>
 <script async
     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAj5lKUoRNwRa0maEalb4F-ATTiNzSwK1g&libraries=places&callback=initMap">
 </script>
 <script>
+$(document).ready(function(){
+  $('#loading-record').hide();
+  $('#loading').hide();
 
+$("#location").keyup(function(){
+  $.ajax({
+  type: "POST",
+  url: "<?php echo base_url('get_map_data');?>",
+  data:'keyword='+$(this).val(),
+  success: function(data){
+var map_data = data.split(',');
+//alert(data);
+autocomplete(document.getElementById("location"), map_data);
+
+  }
+  });
+});
+
+  //Trigger the search
+  $('#go').on('click', function() {
+    $('#loading-record').show();
+    $('#loading').show();
+    $.ajax({
+    url: '<?php echo base_url('home/search_crime_reports');?>',
+    data: $('#search_crime_reports').serialize(),
+    type: 'POST',
+    dataType: 'JSON',
+    success:function(data) {
+        //  alert(data[1].latitude);
+    $('#loading-record').hide();
+    $('#loading').hide();
+        if(data=='false') {
+    $('#records').html('0 Record');
+  } else {
+    $.ajax({
+    url: '<?php echo base_url('home/get_map_data_where');?>',
+    data: $('#search_crime_reports').serialize(),
+    type: 'POST',
+    dataType: 'JSON',
+    success:function(block) {
+$('#lat').val(block.latitude);
+$('#long').val(block.longitude);
+$('#ref').trigger('click');
+    }
+  });
+    var len = data.length;
+    if(len>1) {
+      $('#records').html(len+ '&nbsp;Records');
+    } else if(len=1) {
+        $('#records').html(len+ '&nbsp;Record');
+      }
+    }
+  }
+    });
+  });
+
+});
 
 function get_result() {
+
   $.ajax({
   url: '<?php echo base_url('home/get_crimes');?>',
   type: 'GET',
   dataType: 'JSON',
   success:function(crimes) {
-   for (i = 0; i < crimes.length; i++) {
-const request = {
-  query: crimes[i].location,
-  fields: ["name", "geometry"],
-};
+    const map = new google.maps.Map(document.getElementById("map"), {
+    zoom: 16,
+    center: new google.maps.LatLng(-33.92, 151.25),
+    styles: [
+      {
+        "featureType": "all",
+        "elementType": "labels.icon",
+        "stylers": [
+          { "visibility": "off" }
+        ]
+      }
+    ]
+    });
+   for (let i = 1; i < crimes.length; i++) {
+     var lat = parseFloat(crimes[i].latitude);
+     var lng = parseFloat(crimes[i].longitude);
+     var block = crimes[i].blocks;
+   const myLatLng = { lat: lat, lng: lng };
 
-service = new google.maps.places.PlacesService(map);
-service.findPlaceFromQuery(request, (results, status) => {
-  if (status === google.maps.places.PlacesServiceStatus.OK && results) {
-    for (let i = 0; i < results.length; i++) {
-      var place = results[i];
-      if (!place.geometry || !place.geometry.location) return;
-      const marker = new google.maps.Marker({
-        map,
-        position: place.geometry.location,
-        animation: google.maps.Animation.DROP,
-        label: {
-  fontWeight: 'bold',
-  color: 'white',
-  text: 'C',
+   const infowindow = new google.maps.InfoWindow({
+   content: block,
+   });
+   const marker = new google.maps.Marker({
+   position: myLatLng,
+   map,
+   animation: google.maps.Animation.DROP,
+   label: {
+fontWeight: 'bold',
+color: 'white',
+text: 'C',
+outline: 'black',
 },
-      });
-      marker.addListener("click", () => {
-        window.location.href = place.location;
-        map.setCenter(marker.getPosition());
-      });
-      google.maps.event.addListener(marker, "click", toggleBounce, () => {
-        infowindow.setContent(place.name || "");
-        infowindow.open(map);
-      });
 
-    }
-    map.setCenter(results[0].geometry.location);
-  }
-});
+   });
+   infowindow.open(map, marker);
+
+
 }
 }
 });
-}
-function initAutocomplete() {
-
-  // Create the search box and link it to the UI element.
-  const input = document.getElementById("pac-input");
-  const submit = document.getElementById("submit");
-  const searchBox = new google.maps.places.SearchBox(input);
-const options = {
-  componentRestrictions: { country: "NG" },
-  fields: ["formatted_address", "geometry", "name"],
-  origin: map.getCenter(),
-  strictBounds: false,
-  types: ["establishment"],
-};
-const autocomplete = new google.maps.places.Autocomplete(input, options);
-// Bind the map's bounds (viewport) property to the autocomplete object,
-// so that the autocomplete requests use the current map bounds for the
-// bounds option in the request.
-autocomplete.bindTo("bounds", map);
-//  map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
-  // Bias the SearchBox results towards current map's viewport.
-  map.addListener("bounds_changed", () => {
-    searchBox.setBounds(map.getBounds());
-  });
-  let markers = [];
-  // Listen for the event fired when the user selects a prediction and retrieve
-  // more details for that place.
-  searchBox.addListener("places_changed", () => {
-    const places = searchBox.getPlaces();
-
-    if (places.length == 0) {
-      return;
-    }
-    // Clear out the old markers.
-    markers.forEach((marker) => {
-      marker.setMap(null);
-    });
-    markers = [];
-    // For each place, get the icon, name and location.
-    const bounds = new google.maps.LatLngBounds();
-    places.forEach((place) => {
-      if (!place.geometry || !place.geometry.location) {
-        console.log("Returned place contains no geometry");
-        return;
-      }
-      const icon = {
-        url: place.icon,
-        size: new google.maps.Size(71, 71),
-        origin: new google.maps.Point(0, 0),
-        anchor: new google.maps.Point(17, 34),
-        scaledSize: new google.maps.Size(25, 25),
-      };
-      // Create a marker for each place.
-      markers.push(
-        new google.maps.Marker({
-          map,
-          icon,
-          title: place.name,
-          position: place.geometry.location,
-        })
-      );
-
-      if (place.geometry.viewport) {
-        // Only geocodes have viewport.
-        bounds.union(place.geometry.viewport);
-      } else {
-        bounds.extend(place.geometry.location);
-      }
-    });
-    map.fitBounds(bounds);
-  });
-}
-
-function buttonSearch() {
-  const request = {
-    query: $('#pac-input').val(),
-    fields: ["name", "geometry"],
-  };
-  service = new google.maps.places.PlacesService(map);
-  service.findPlaceFromQuery(request, (results, status) => {
-    if (status === google.maps.places.PlacesServiceStatus.OK && results) {
-      for (let i = 0; i < results.length; i++) {
-        createMarker(results[i]);
-      }
-      map.setCenter(results[0].geometry.location);
-    }
-  });
-
 }
 
 let map;
@@ -272,45 +248,40 @@ function initMap() {
   map = new google.maps.Map(document.getElementById("map"), {
     center: home,
     zoom: 15,
+    styles: [
+      {
+        "featureType": "all",
+        "elementType": "labels.icon",
+        "stylers": [
+          { "visibility": "off" }
+        ]
+      }
+    ]
   });
+
 get_result();
- map.setOptions({ styles: styles["hide"] });
-    google.maps.event.addDomListener(window, 'load', initAutocomplete);
-  $('#submit').on('click',function() {
-buttonSearch();
-  });
 
-}
-const styles = {
-  default: [],
-  hide: [
-    {
-      featureType: "all",
-      elementType: "labels.icon",
-      stylers: [{ visibility: "on" }],
-    },
-    {
-      featureType: "all",
-      elementType: "labels.text",
-      stylers: [{ visibility: "on" }],
-    },
-  ],
-};
+$('#ref').on('click', function() {
+  var lat = parseFloat(document.getElementById('lat').value);
+  var lng = parseFloat(document.getElementById('long').value);
+  var block = $('#location').val();
+const myLatLng = { lat: lat, lng: lng };
+const map = new google.maps.Map(document.getElementById("map"), {
+zoom: 16,
+center: myLatLng,
+});
 
-function createMarker(place) {
-  if (!place.geometry || !place.geometry.location) return;
-  const marker = new google.maps.Marker({
-    map,
-    position: place.geometry.location,
-    animation: google.maps.Animation.DROP,
-  });
+const infowindow = new google.maps.InfoWindow({
+content: block,
+});
+const marker = new google.maps.Marker({
+position: myLatLng,
+map,
+label: "C",
+});
+infowindow.open(map, marker);
 
-  google.maps.event.addListener(marker, "click", toggleBounce, () => {
-    infowindow.setContent(place.name || "");
-    infowindow.open(map);
-  });
-
-
+});
 }
 
 

@@ -12,11 +12,12 @@
   <title>{title}</title>
   <link href="<?php echo base_url();?>template/assets/css/main.css" rel="stylesheet">
   <link href="<?php echo base_url();?>template/assets/css/bootstrap.css" rel="stylesheet">
-<link href="<?php echo base_url();?>template/assets/css/all.css" rel="stylesheet">
+<link href="<?php echo base_url();?>template/assets/fontawesome/css/all.css" rel="stylesheet">
   </head>
  <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
  <script src="<?php echo base_url();?>template/assets/js/jquery.min.js"></script>
-  <script src="<?php echo base_url();?>template/assets/js/custom_map.js"></script>
+  <script src="<?php echo base_url();?>template/assets/js/mobile.js"></script>
+  <script src="<?php echo base_url();?>template/assets/js/autocomplete.js"></script>
  <script src="<?php echo base_url();?>template/assets/js/bootstrap.bundle.min.js"></script>
 
  <div id="head">
@@ -115,97 +116,86 @@
     <h4>Post Review</h4>
   </div>
   <div class="panel-body row">
-
     <div class="col-md-12 col-12">
-<div class="card mt-2">
-  <div class="card-body">
-    <span class="mb-1"><strong>Robbery</strong></span>
-    <span class="f-right">4 metres away</span><br>
+      <form id="report_crime">
+      <div class="form-group">
+        <label>Crime</label>
+    <select name="type" class="form-control">
+      <option>-Select-</option>
+      <option value="Arson">Assault</option>
+      <option value="Exam Malpractice">Exam Malpractice</option>
+      <option value="Sex Crime">Sex Crime</option>
+      <option value="Drugs/Alcohol Violation">Drugs/Alcohol Violation</option>
+      <option value="Robbery">Robbery</option>
+      <option value="Murder">Murder</option>
+    </select>
+      </div>
 
-      <span class="mb-1"><strong><i class="fas fa-map-marker-alt text-danger"></i> Engineering Market</strong></span>
-      <span class="f-right ">24-05-2021 @ 10:00pm</span>
-      <hr>
-      <div class="row">
-      <div class="col-md-6 col-sm-6 col-6"><button class="btn btn-outline-success my-2 my-sm-0 btn-block">
-        <strong>Genuine Report</strong></button></div>
-      <div class="col-md-6 col-sm-6 col-6"><button class="btn btn-outline-danger my-2 my-sm-0 btn-block">
-        <strong>False Report</strong></button></div>
+      <div class="form-group autocomplete">
+        <label>Crime Scene</label>
+      <input name="location" id="location" type="text" class="form-control" placeholder="Search Scene">
+      </div>
+
+      <div class="form-group">
+        <label>Date</label>
+      <input name="date" type="date" value="<?php $date = date('Y/m/d'); echo date("Y-m-d", strtotime($date) );?>" class="form-control" placeholder="date">
       </div>
       <div class="form-group">
-      <input type="text" class="form-control outline-success" placeholder="Title (optional)">
-    </div>
-    <div class="form-group">
-      <input type="text" class="form-control" placeholder="Review (optional)">
-    </div>
-  <button class="btn btn-primary btn-block">Post Review</button>
-
+        <label>Time</label>
+      <input name="time" type="time" value="<?php echo date('H:m:s');?>" class="form-control" placeholder="time">
+      </div>
+      <div class="form-group">
+        <label>Description</label>
+      <textarea cols="3" class="form-control" name="description" placeholder="Description (optional)"></textarea>
+      </div>
+      <input type="hidden" name="status" value="active">
+      <input type="hidden" name="report_by" value="{name}">
+      <button type="button" class="btn btn-primary btn-block"  id="report">Post Review <i id="loading" class="fas fa-cog fa-spin"></i></button>
 </div>
-</div>
-</div>
-
+</form>
 </div>
 <div id="map" style="display:none;"></div>
 
 </div>
 </div>
-<script async
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAj5lKUoRNwRa0maEalb4F-ATTiNzSwK1g&libraries=places&callback=initMap">
-</script>
-
 <script>
 $(document).ready(function() {
+  $('#loading').hide();
+  $("#location").keyup(function(){
+    $.ajax({
+    type: "POST",
+    url: "<?php echo base_url('get_map_data');?>",
+    data:'keyword='+$(this).val(),
+    success: function(data){
+  var map_data = data.split(',');
+  //alert(data);
+  autocomplete(document.getElementById("location"), map_data);
 
-$('#hide').hide();
-$('#show').click(function() {
-$('#hide').show();
-$('#show').hide();
-});
-
-$('#hide').click(function() {
-$('#hide').hide();
-$('#show').show();
-});
-});
-function darken_screen(yesno){
-  if( yesno == true ){
-    document.querySelector('.screen-darken').classList.add('active');
-  }
-  else if(yesno == false){
-    document.querySelector('.screen-darken').classList.remove('active');
-  }
-}
-
-function close_offcanvas(){
-  darken_screen(false);
-  document.querySelector('.mobile-offcanvas.show').classList.remove('show');
-  document.body.classList.remove('offcanvas-active');
-}
-
-function show_offcanvas(offcanvas_id){
-  darken_screen(true);
-  document.getElementById(offcanvas_id).classList.add('show');
-  document.body.classList.add('offcanvas-active');
-}
-
-document.addEventListener("DOMContentLoaded", function(){
-
-  document.querySelectorAll('[data-trigger]').forEach(function(everyelement){
-    let offcanvas_id = everyelement.getAttribute('data-trigger');
-    everyelement.addEventListener('click', function (e) {
-      e.preventDefault();
-          show_offcanvas(offcanvas_id);
+    }
     });
   });
 
-  document.querySelectorAll('.btn-close').forEach(function(everybutton){
-    everybutton.addEventListener('click', function (e) {
-          close_offcanvas();
-      });
+
+  $('#report').on('click',function() {
+  $('#loading').show();
+  $.ajax({
+  url: '<?php echo base_url('dashboard/save_crime_report');?>',
+  data: $('#report_crime').serialize(),
+  type: 'POST',
+  success:function(data) {
+  $('#loading').hide();
+  if(data !=='true') {
+    alert(data);
+  }
+  else if(data=='true') {
+    alert('Your report has been logged successfully');
+    window.location.href = '<?php echo base_url('dashboard/crime_reports');?>';
+  }
+  }
+  });
   });
 
-  document.querySelector('.screen-darken').addEventListener('click', function(event){
-    close_offcanvas();
-  });
+
 
 });
 </script>

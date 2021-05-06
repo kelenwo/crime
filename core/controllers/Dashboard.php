@@ -1,9 +1,15 @@
 <?php
 class Dashboard extends CI_Controller {
-
+  public function __construct()  {
+          parent::__construct();
+if(empty($this->session->email)) {
+    header('Location:'.base_url().'ucp/login/signin/return/'.str_replace('/','-',uri_string()));
+}
+}
         public function index()
         {
              $data = $this->session->userdata();
+             $data['reports'] = $this->crime_model->get_crime_reports_all();
              $data['title'] = "CRIME MAPPING SYSTEM";
                 // $this->load->view('head', $data);
                 $this->parser->parse('user_index', $data);
@@ -16,6 +22,24 @@ class Dashboard extends CI_Controller {
              $data['title'] = "CRIME MAPPING SYSTEM";
                 // $this->load->view('head', $data);
                 $this->parser->parse('user_review_post', $data);
+
+        }
+
+        public function crime_reports()
+        {
+          $data = $this->session->userdata();
+          $data['reports'] = $this->crime_model->get_crime_reports();
+          $data['title'] = "REPORT CRIME- CRIME MAPPING SYSTEM";
+                // $this->load->view('head', $data);
+                $this->parser->parse('user_crime_reports', $data);
+        }
+
+        public function report_crime()
+        {
+             $data = $this->session->userdata();
+             $data['title'] = "CRIME MAPPING SYSTEM";
+                // $this->load->view('head', $data);
+                $this->parser->parse('user_report_crime', $data);
 
         }
         public function crime_search($location)
@@ -43,36 +67,6 @@ class Dashboard extends CI_Controller {
                 $this->parser->parse('register', $data);
         }
 
-        public function report_crime()
-        {
-          if(empty($this->session->name)) {
-              header('Location:'.base_url().'login');
-          }
-              $data = $this->session->userdata();
-             $data['title'] = "REPORT CRIME- CRIME MAPPING SYSTEM";
-                // $this->load->view('head', $data);
-                $this->parser->parse('report_crime', $data);
-
-        }
-        public function crime_reports()
-        {
-          $data = $this->session->userdata();
-          if(empty($this->session->name)) {
-              header('Location:'.base_url().'login');
-          }
-          $data['reports'] = $this->crime_model->get_crime_reports();
-          $data['title'] = "REPORT CRIME- CRIME MAPPING SYSTEM";
-                // $this->load->view('head', $data);
-                $this->parser->parse('crime_reports', $data);
-        }
-
-        public function ongoing_crimes()
-        {
-          $data = $this->session->userdata();
-          $data['title'] = "REPORT CRIME- CRIME MAPPING SYSTEM";
-                // $this->load->view('head', $data);
-          $this->parser->parse('ongoing_crime', $data);
-        }
 
 
         public function login_user() {
@@ -118,6 +112,10 @@ class Dashboard extends CI_Controller {
               $data = $this->crime_model->get_crimes();
             echo json_encode($data);
             }
+            public function get_map_data_where() {
+                $data = $this->crime_model->get_map_data_where();
+              echo json_encode($data);
+              }
           public function search_crime_reports() {
         //    if(empty($this->input->post('sort')) {
           //    $sort =

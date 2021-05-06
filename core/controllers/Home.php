@@ -1,6 +1,11 @@
 <?php
 class Home extends CI_Controller {
-
+  public function __construct()  {
+          parent::__construct();
+if(empty($this->session->email)) {
+    header('Location:'.base_url().'ucp/login/signin/return/'.str_replace('/','-',uri_string()));
+}
+}
         public function index()
         {
              $data = $this->session->userdata();
@@ -65,6 +70,14 @@ class Home extends CI_Controller {
           $this->parser->parse('ongoing_crime', $data);
         }
 
+        public function map_data()
+        {
+          $data = $this->session->userdata();
+          $data['title'] = "ADD MAP DATA- CRIME MAPPING SYSTEM";
+                // $this->load->view('head', $data);
+          $this->parser->parse('map_data', $data);
+        }
+
 
         public function login_user() {
         $login = $this->crime_model->login_user();
@@ -105,9 +118,40 @@ class Home extends CI_Controller {
           }
 
           }
+
+          public function save_map_data() {
+              $data = $this->crime_model->save_map_data();
+              if($data==true) {
+              echo 'true';
+            } else {
+              echo $data;
+            }
+
+            }
+
+            public function get_map_data() {
+                $dat = $this->crime_model->get_map_data();
+                $imploded = array();
+                    foreach($dat as $array) {
+                        $imploded[] = implode(',', $array);
+                    }
+                    echo implode(",", $imploded);
+              //  echo $data;
+            }
+            public function get_map_data_where() {
+                $data = $this->crime_model->get_map_data_where($this->input->post('location'));
+              echo json_encode($data);
+              }
+
           public function get_crimes() {
-              $data = $this->crime_model->get_crimes();
-            echo json_encode($data);
+              $req = $this->crime_model->get_crimes();
+              $arr = array($req);
+                foreach($req as $res) {
+                $val = $this->crime_model->get_map_data_where($res['location']);
+
+                array_push($arr,$val);
+              }
+            echo json_encode($arr);
             }
           public function search_crime_reports() {
         //    if(empty($this->input->post('sort')) {

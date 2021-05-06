@@ -12,7 +12,7 @@
   <title>{title}</title>
   <link href="<?php echo base_url();?>template/assets/css/main.css" rel="stylesheet">
   <link href="<?php echo base_url();?>template/assets/css/bootstrap.css" rel="stylesheet">
-  <link href="<?php echo base_url();?>template/assets/css/all.css" rel="stylesheet">
+<link href="<?php echo base_url();?>template/assets/css/all.css" rel="stylesheet">
   </head>
  <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
  <script src="<?php echo base_url();?>template/assets/js/jquery.min.js"></script>
@@ -48,13 +48,13 @@
 <hr></h4>
     <ul class="navbar-nav mr-auto">
       <li class="nav-item active">
-        <a class="nav-link" href="#"><i class="fas fa-home"></i> &nbsp; Dashboard <span class="sr-only">(current)</span></a>
+        <a class="nav-link" href="<?php echo base_url();?>dashboard/index"><i class="fas fa-home"></i> &nbsp; Dashboard <span class="sr-only">(current)</span></a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="#"><i class="fas fa-bell"></i> &nbsp; Report Crime</a>
+        <a class="nav-link" href="<?php echo base_url();?>dashboard/report_crime"><i class="fas fa-bell"></i> &nbsp; Report Crime</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="#"><i class="fas fa-home"></i> &nbsp; Your reports</a>
+        <a class="nav-link" href="<?php echo base_url();?>dashboard/crime_reports"><i class="fas fa-home"></i> &nbsp; Your reports</a>
       </li>
       <li class="nav-item">
         <a class="nav-link" href="#"><i class="fas fa-user"></i> &nbsp; Profile</a>
@@ -71,18 +71,23 @@
   <div id="side">
   <ul class="nav flex-column nav-custom">
     <li class="nav-item">
-      <a class="nav-link active" href="#">
+      <a class="nav-link active" href="<?php echo base_url();?>dashboard/index">
         <img class="logo" src="<?php echo base_url();?>template/assets/uniuyo.png"></img></a>
     </li>
     <li class="nav-item">
-      <a class="nav-link active" href="#">
+      <a class="nav-link active" href="<?php echo base_url();?>dashboard/index">
         <i class="fas fa-home"></i><br>
         Dashboard</a>
     </li>
     <li class="nav-item">
-      <a class="nav-link" href="<?php echo base_url();?>home/ongoing_crimes">
+      <a class="nav-link" href="<?php echo base_url();?>dashboard/report_crime">
           <i class="fas fa-bell"></i><br>
           Report Crime</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="<?php echo base_url();?>dashboard/crime_reports">
+          <i class="fas fa-bell"></i><br>
+          Your Reports</a>
     </li>
     <li class="nav-item">
       <a class="nav-link" href="#">
@@ -117,14 +122,14 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
+      <?php foreach($reports as $req): ?>
 <div class="card mt-2">
   <div class="card-body">
-    <span class="mb-1"><strong>Robbery</strong></span>
+    <span class="mb-1"><strong><?php echo $req['type'];?></strong></span>
     <span class="f-right mb-1">4 metres away</span><br>
-    <div style="display:inline-block;">
-      <span style="color:green; font-weight:bold;" class="mr-3"><i class="fas fa-map-marker-alt text-danger"></i> Engineering Market</span>
-      <span class="ml-4" style="float: right;">24-05-2021 @ 10:00pm</span>
-      </div>
+      <span style="color:green; font-weight:bold;" class="mb-1"><i class="fas fa-map-marker-alt text-danger"></i> <?php echo $req['location'];?></span>
+      <span class="f-right mb-1"><?php echo $req['date'];?> @ <?php echo $req['time'];?></span>
+
       <hr>
     <div class="text-center"><p class="card-text">Did you witness this? kindly, Post a review.
       </p>
@@ -133,6 +138,7 @@
 
 </div>
 </div>
+<?php endforeach;?>
 </div>
 
 </div>
