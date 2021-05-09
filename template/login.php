@@ -53,16 +53,16 @@ $(document).ready(function () {
   $('#submit').click(function() {
   $('#loading').show();
   $.ajax({
-  url: '<?php echo base_url('login_user');?>',
+  url: '<?php echo base_url('ucp/login/login_user');?>',
   data: $('#login').serialize(),
   type: 'POST',
   success:function(data) {
   $('#loading').hide();
-  if(data !=='true') {
-    alert(data);
+  if(data=='true') {
+      window.location.href = '<?php echo base_url();?>';
   }
-  else if(data=='true') {
-    window.location.href = '<?php echo base_url();?>';
+  else {
+    alert(data);
   }
   }
   });

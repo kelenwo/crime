@@ -17,12 +17,15 @@
  <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
  <script src="<?php echo base_url();?>template/assets/js/jquery.min.js"></script>
   <script src="<?php echo base_url();?>template/assets/js/autocomplete.js"></script>
+  <script src="<?php echo base_url();?>template/assets/js/fa.js"></script>
  <script src="<?php echo base_url();?>template/assets/js/bootstrap.bundle.min.js"></script>
 
  <div id="head">
    <div class="col-lg-12 col-md-12 row">
      <div class="col-lg-8 col-md-8">
- <b>CRIME MAPPING SYSTEM</b>
+       <a class="" href="<?php echo base_url();?>">
+         <img class="logo mr-2" src="<?php echo base_url();?>template/assets/uniuyo.png"></img>
+ <b class="mt-1">CRIME MAPPING SYSTEM</b></a>
  </div> <div class="col-lg-4 col-md-4">
  <?php if(isset($name)): ?>
  <b style="float: right;">{name} - <a href="<?php echo base_url();?>logout" style="color:#fcc;">Logout </a></b>
@@ -73,51 +76,47 @@
  </div>
  </form>
 <div class="text-center">
-<div id="side">
-  <ul class="nav flex-column nav-custom">
+  <div id="side">
+    <ul class="nav flex-column nav-custom">
+      <li class="nav-item">
+        <a class="nav-link active" href="<?php echo base_url();?>home/index">
+          <i class="fas fa-home"></i><br>
+          Home</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="<?php echo base_url();?>home/ongoing_crimes">
+            <i class="fas fa-bell"></i><br>
+            Ongoing Crimes</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#">
+            <i class="far fa-file-export"></i><br>
+            Generate Report</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="<?php echo base_url('crime_reports');?>">
+            <i class="far fa-file-export"></i><br>
+            Crime Reports</a>
+      </li>
+        <?php if(isset($name)):?>
+      <?php if($rights=='admin'):?>
+      <li class="nav-item">
+        <a class="nav-link" href="#">
+            <i class="fas fa-user-shield"></i><br>
+            Administrator</a>
+      </li>
+    <?php endif;?>
+  <?php endif;?>
+
+    <?php if(!isset($name)):?>
     <li class="nav-item">
-      <a class="nav-link active" href="#">
-        <img class="logo" src="<?php echo base_url();?>template/assets/uniuyo.png"></img></a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link active" href="#">
-        <i class="fas fa-home"></i><br>
-        Home</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" href="<?php echo base_url();?>home/ongoing_crimes">
-          <i class="fas fa-bell"></i><br>
-          Ongoing Crimes</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" href="#">
-          <i class="far fa-file-export"></i><br>
-          Generate Report</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" href="<?php echo base_url('crime_reports');?>">
-          <i class="far fa-file-export"></i><br>
-          Crime Reports</a>
-    </li>
-      <?php if(isset($name)):?>
-    <?php if($rights=='admin'):?>
-    <li class="nav-item">
-      <a class="nav-link" href="#">
-          <i class="fas fa-user-shield"></i><br>
-          Administrator</a>
+      <a class="nav-link disabled" href="#">
+          <i class="fas fa-user"></i><br>
+          Login</a>
     </li>
   <?php endif;?>
-<?php endif;?>
-
-  <?php if(!isset($name)):?>
-  <li class="nav-item">
-    <a class="nav-link disabled" href="#">
-        <i class="fas fa-user"></i><br>
-        Login</a>
-  </li>
-<?php endif;?>
-  </ul>
-</div>
+    </ul>
+  </div>
 </div>
 
 <div id="main-body" class="container">
@@ -196,10 +195,9 @@ function get_result() {
   type: 'GET',
   dataType: 'JSON',
   success:function(crimes) {
-  var crime = crimes[0];
     const map = new google.maps.Map(document.getElementById("map"), {
     zoom: 16,
-    center: new google.maps.LatLng(-33.92, 151.25),
+    center: new google.maps.LatLng(5.028829, 7.978997),
     styles: [
       {
         "featureType": "all",
@@ -210,12 +208,20 @@ function get_result() {
       }
     ]
     });
-   for (i = 1; i < crimes.length; i++) {
-    var latitude = crimes[i].latitude;
-    var longitude = crimes[i].longitude;
-     var lat = parseFloat(latitude);
-     var lng = parseFloat(longitude);
-     var block = crimes[i].blocks;
+   for (i = 0; i < crimes.length; i++) {
+     var lat = parseFloat(crimes[i].latitude);
+     var lng = parseFloat(crimes[i].longitude);
+     var block = crimes[i].location;
+     var status = crimes[i].status;
+     var report_id = crimes[i].report_id;
+//alert(report_id);
+if(status=="active") {
+var icon = '<?php echo base_url();?>template/assets/marker-red.png';
+var color = 'red';
+} else if(status=="closed") {
+var icon = 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png';
+var color = '#111';
+}
    const myLatLng = { lat: lat, lng: lng };
 
    const infowindow = new google.maps.InfoWindow({
@@ -225,16 +231,31 @@ function get_result() {
    position: myLatLng,
    map,
    animation: google.maps.Animation.DROP,
-   label: {
-fontWeight: 'bold',
-color: 'white',
-text: 'C',
-outline: 'black',
+   icon: {
+  labelOrigin: new google.maps.Point(16,64),
+  url: icon
 },
-
+title: report_id,
+  label: {
+    text: block,
+    color: color,
+    fontWeight: "",
+    fontSize: "12px"
+}
    });
    infowindow.open(map, marker);
-
+  // marker.addListener("click", () => {
+//     window.location.href = '<?php echo base_url();?>home/view_crime/review/'+report_id;
+//   });
+//alert(marker['title']);
+marker.addListener("click", () => {
+  infowindow.close();
+  window.location.href = '<?php echo base_url();?>home/view_crime/review/'+marker['title'];
+});
+   google.maps.event.addListener(marker, "click", toggleBounce, () => {
+     infowindow.setContent(place.name || "");
+     infowindow.open(map);
+   });
 
 }
 }
@@ -263,6 +284,15 @@ const myLatLng = { lat: lat, lng: lng };
 const map = new google.maps.Map(document.getElementById("map"), {
 zoom: 16,
 center: myLatLng,
+styles: [
+  {
+    "featureType": "all",
+    "elementType": "labels.icon",
+    "stylers": [
+      { "visibility": "off" }
+    ]
+  }
+]
 });
 
 const infowindow = new google.maps.InfoWindow({

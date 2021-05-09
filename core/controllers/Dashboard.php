@@ -3,23 +3,31 @@ class Dashboard extends CI_Controller {
   public function __construct()  {
           parent::__construct();
 if(empty($this->session->email)) {
+  if(empty(uri_string())) {
+ header('Location:'.base_url().'ucp/login');
+  } else {
     header('Location:'.base_url().'ucp/login/signin/return/'.str_replace('/','-',uri_string()));
+  }
 }
 }
         public function index()
         {
              $data = $this->session->userdata();
              $data['reports'] = $this->crime_model->get_crime_reports_all();
+              //$data['review'] = $this->crime_model->get_crime_reports_all();
              $data['title'] = "CRIME MAPPING SYSTEM";
                 // $this->load->view('head', $data);
                 $this->parser->parse('user_index', $data);
 
         }
 
-        public function crime_review()
+        public function crime_review($id)
         {
              $data = $this->session->userdata();
+             $data['reports'] = get_object_vars($this->crime_model->get_crime_reports_for_review($id));
+             $data['review'] = $id;
              $data['title'] = "CRIME MAPPING SYSTEM";
+
                 // $this->load->view('head', $data);
                 $this->parser->parse('user_review_post', $data);
 
@@ -54,35 +62,6 @@ if(empty($this->session->email)) {
 
         }
 
-        public function login()
-        {
-             $data['title'] = "LOGIN - CRIME MAPPING SYSTEM";
-                // $this->load->view('head', $data);
-                $this->parser->parse('login', $data);
-        }
-        public function ucp($register)
-        {
-             $data['title'] = "LOGIN - CRIME MAPPING SYSTEM";
-                // $this->load->view('head', $data);
-                $this->parser->parse('register', $data);
-        }
-
-
-
-        public function login_user() {
-        $login = $this->crime_model->login_user();
-        if($login==false) {
-          echo 'Invalid Email Address/Password';
-        }
-        else {
-        $pass = $this->input->post('password');
-        if(password_verify($pass,$login->password)) {
-          $res = get_object_vars($login);
-        $store =  $this->session->set_userdata($res);
-          echo 'true';
-        } else { echo 'Password is not correct';}
-        }
-      }
 
         public function save_user_data() {
           $email_check = $this->crime_model->email_check();
@@ -106,6 +85,15 @@ if(empty($this->session->email)) {
           } else {
             echo $data;
           }
+        }
+
+          public function save_review() {
+              $data = $this->crime_model->save_review();
+              if($data==true) {
+              echo 'true';
+            } else {
+              echo $data;
+            }
 
           }
           public function get_crimes() {

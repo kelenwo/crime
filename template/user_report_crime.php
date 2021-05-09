@@ -12,7 +12,7 @@
   <title>{title}</title>
   <link href="<?php echo base_url();?>template/assets/css/main.css" rel="stylesheet">
   <link href="<?php echo base_url();?>template/assets/css/bootstrap.css" rel="stylesheet">
-<link href="<?php echo base_url();?>template/assets/fontawesome/css/all.css" rel="stylesheet">
+<link href="<?php echo base_url();?>template/assets/css/all.css" rel="stylesheet">
   </head>
  <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
  <script src="<?php echo base_url();?>template/assets/js/jquery.min.js"></script>
@@ -113,7 +113,7 @@
 <div id="main-body">
 <div class="panel">
   <div class="panel-heading">
-    <h4>Post Review</h4>
+    <h4>Report Crime</h4>
   </div>
   <div class="panel-body row">
     <div class="col-md-12 col-12">
@@ -149,8 +149,9 @@
       <textarea cols="3" class="form-control" name="description" placeholder="Description (optional)"></textarea>
       </div>
       <input type="hidden" name="status" value="active">
+      <input type="hidden" name="report_id" value="<?php echo time();?>">
       <input type="hidden" name="report_by" value="{name}">
-      <button type="button" class="btn btn-primary btn-block"  id="report">Post Review <i id="loading" class="fas fa-cog fa-spin"></i></button>
+      <button type="button" class="btn btn-primary btn-block"  id="report">Report Crime <i id="loading" class="fas fa-cog fa-spin"></i></button>
 </div>
 </form>
 </div>

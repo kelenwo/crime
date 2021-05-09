@@ -119,25 +119,32 @@
     <div class="col-md-12 col-12">
 <div class="card mt-2">
   <div class="card-body">
-    <span class="mb-1"><strong>Robbery</strong></span>
+    <form id="review">
+    <span class="mb-1"><strong><?php echo $reports['type'];?></strong></span>
     <span class="f-right">4 metres away</span><br>
 
-      <span class="mb-1"><strong><i class="fas fa-map-marker-alt text-danger"></i> Engineering Market</strong></span>
-      <span class="f-right ">24-05-2021 @ 10:00pm</span>
+      <span class="mb-1"><strong><i class="fas fa-map-marker-alt text-danger"></i> <?php echo $reports['location'];?></strong></span>
+      <span class="f-right "><?php echo $reports['date'];?> @ <?php echo $reports['time'];?></span>
       <hr>
       <div class="row">
-      <div class="col-md-6 col-sm-6 col-6"><button class="btn btn-outline-success my-2 my-sm-0 btn-block">
-        <strong>Genuine Report</strong></button></div>
-      <div class="col-md-6 col-sm-6 col-6"><button class="btn btn-outline-danger my-2 my-sm-0 btn-block">
-        <strong>False Report</strong></button></div>
+      <div class="col-md-6 col-sm-6 col-6"><button type="button" id="genuine" class="btn btn-outline-success my-2 my-sm-0 btn-block">
+        <strong>Genuine</strong></button></div>
+      <div class="col-md-6 col-sm-6 col-6"><button type="button" id="false" class="btn btn-outline-danger my-2 my-sm-0 btn-block">
+        <strong>False</strong></button></div>
       </div>
       <div class="form-group">
-      <input type="text" class="form-control outline-success" placeholder="Title (optional)">
+      <input type="text" name="title" class="form-control outline-success" placeholder="Title (optional)">
     </div>
+    <input type="hidden" name="review_by" value="{name}">
+    <input type="hidden" name="status" id="status">
+    <input type="hidden" name="report_id" value="<?php echo $reports['report_id'];?>">
+    <input type="hidden" name="date" value="<?php echo date('d-m-Y');?>">
+    <input type="hidden" name="time" value="<?php echo date('H:m A');?>">
     <div class="form-group">
-      <input type="text" class="form-control" placeholder="Review (optional)">
+      <input type="text" name="review" class="form-control" placeholder="Review (optional)">
     </div>
-  <button class="btn btn-primary btn-block">Post Review</button>
+  </form>
+  <button type="button" id="submit" class="btn btn-primary btn-block">Post Review <i id="loading" class="fas fa-cog fa-spin"></i></button>
 
 </div>
 </div>
@@ -164,6 +171,42 @@ $('#show').hide();
 $('#hide').click(function() {
 $('#hide').hide();
 $('#show').show();
+});
+
+$('#genuine').click(function() {
+$('#status').val('genuine');
+$('#genuine').addClass('btn-success');
+$('#genuine').removeClass('btn-outline-success');
+$('#false').removeClass('btn-danger');
+$('#false').addClass('btn-outline-danger');
+});
+
+$('#false').click(function() {
+$('#status').val('false');
+$('#false').addClass('btn-danger');
+$('#false').removeClass('btn-outline-danger');
+$('#genuine').removeClass('btn-success');
+$('#genuine').addClass('btn-outline-success');
+});
+
+$('#loading').hide();
+$('#submit').on('click',function() {
+$('#loading').show();
+$.ajax({
+url: '<?php echo base_url('dashboard/save_review');?>',
+data: $('#review').serialize(),
+type: 'POST',
+success:function(data) {
+$('#loading').hide();
+if(data !=='true') {
+  alert(data);
+}
+else if(data=='true') {
+  alert('Your review has been logged successfully');
+  window.location.href = '<?php echo base_url('dashboard/index');?>';
+}
+}
+});
 });
 });
 function darken_screen(yesno){
@@ -208,4 +251,5 @@ document.addEventListener("DOMContentLoaded", function(){
   });
 
 });
+
 </script>

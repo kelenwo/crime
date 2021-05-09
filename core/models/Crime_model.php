@@ -15,6 +15,11 @@ Class Crime_model Extends CI_model {
         }
     }
 
+    public function get_users() {
+      $query = $this->db->get('users');
+      return $query->result_array();
+    }
+
     public function get_crime_reports() {
       $this->db->where('report_by',$this->session->name);
       $query = $this->db->get('crime_report');
@@ -26,8 +31,28 @@ Class Crime_model Extends CI_model {
       return $query->result_array();
     }
 
+    public function get_crime_reports_for_review($id) {
+      $this->db->select('*');
+      $this->db->where('report_id',$id);
+      $query = $this->db->get('crime_report');
+      return $query->row();
+    }
+
+    public function get_crime_review($id) {
+      $this->db->where('report_id',$id);
+      $query = $this->db->get('crime_review');
+
+      return $query->result_array();
+    }
+
     public function get_crimes() {
       $this->db->select('location');
+      $query = $this->db->get('crime_report');
+      return $query->result_array();
+    }
+
+    public function get_crimes_all() {
+      $this->db->select('*');
       $query = $this->db->get('crime_report');
       return $query->result_array();
     }
@@ -84,6 +109,15 @@ Class Crime_model Extends CI_model {
   		return mysqli_error();
   	}
   }
+
+  public function save_review() {
+    $query = $this->db->insert('crime_review',$this->input->post());
+    if($query) {
+      return true;
+    } else {
+      return mysqli_error();
+    }
+  }
   public function save_map_data() {
     $query = $this->db->insert('map_data',$this->input->post());
     if($query) {
@@ -116,5 +150,24 @@ Class Crime_model Extends CI_model {
         //returns false if it doesnt exist
     }
 
+  }
+
+  public function count_reports_user($name) {
+  $this->db->where('report_by',$name);
+  $this->db->from('crime_report');
+  return $this->db->count_all_results();
+  }
+
+  public function count_false_reports_user($name) {
+  $this->db->where('report_by',$name);
+  $this->db->where('verify','false');
+  $this->db->from('crime_report');
+  return $this->db->count_all_results();
+  }
+
+  public function count_reviews_user($name) {
+  $this->db->where('review_by',$name);
+  $this->db->from('crime_review');
+  return $this->db->count_all_results();
   }
 }

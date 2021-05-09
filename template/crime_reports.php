@@ -83,9 +83,9 @@
           Generate Report</a>
     </li>
     <li class="nav-item">
-      <a class="nav-link disabled" href="#">
+      <a class="nav-link" href="<?php echo base_url();?>home/manage_users">
           <i class="fas fa-user-shield"></i><br>
-          Administrator</a>
+          Manage Users</a>
     </li>
   </ul>
 </div>

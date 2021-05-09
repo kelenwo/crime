@@ -16,19 +16,21 @@
   </head>
  <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
  <script src="<?php echo base_url();?>template/assets/js/jquery.min.js"></script>
-<div id="head">
-  <div class="col-lg-12 col-md-12 row">
-    <div class="col-lg-8 col-md-8">
-<b>CRIME MAPPING SYSTEM</b>
-</div> <div class="col-lg-4 col-md-4">
-<?php if(isset($name)): ?>
-<b style="float: right;">{name} - <a href="<?php echo base_url();?>logout" style="color:#fcc;">Logout </a></b>
-<?php else: ?>
-  <b style="float:right;"><a href="<?php echo base_url();?>login" style="color:#fff;">Login </a></b>
-<?php endif;?>
-</div>
-</div>
-</div>
+ <div id="head">
+   <div class="col-lg-12 col-md-12 row">
+     <div class="col-lg-8 col-md-8">
+       <a class="" href="<?php echo base_url();?>">
+         <img class="logo mr-2" src="<?php echo base_url();?>template/assets/uniuyo.png"></img>
+ <b class="mt-1">CRIME MAPPING SYSTEM</b></a>
+ </div> <div class="col-lg-4 col-md-4">
+ <?php if(isset($name)): ?>
+ <b style="float: right;">{name} - <a href="<?php echo base_url();?>logout" style="color:#fcc;">Logout </a></b>
+ <?php else: ?>
+   <b style="float:right;"><a href="<?php echo base_url();?>login" style="color:#fff;">Login </a></b>
+ <?php endif;?>
+ </div>
+ </div>
+ </div>
 
 <div id="menu">
   <div class="row">
@@ -72,46 +74,47 @@
 </div>
 </form>
 <div class="container-fluid text-center">
-<div id="side">
-  <ul class="nav flex-column nav-custom">
+  <div id="side">
+    <ul class="nav flex-column nav-custom">
+      <li class="nav-item">
+        <a class="nav-link active" href="<?php echo base_url();?>home/index">
+          <i class="fas fa-home"></i><br>
+          Home</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="<?php echo base_url();?>home/ongoing_crimes">
+            <i class="fas fa-bell"></i><br>
+            Ongoing Crimes</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#">
+            <i class="far fa-file-export"></i><br>
+            Generate Report</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="<?php echo base_url('crime_reports');?>">
+            <i class="far fa-file-export"></i><br>
+            Crime Reports</a>
+      </li>
+        <?php if(isset($name)):?>
+      <?php if($rights=='admin'):?>
+      <li class="nav-item">
+        <a class="nav-link" href="#">
+            <i class="fas fa-user-shield"></i><br>
+            Administrator</a>
+      </li>
+    <?php endif;?>
+  <?php endif;?>
+
+    <?php if(!isset($name)):?>
     <li class="nav-item">
-      <a class="nav-link active" href="#">
-        <img class="logo" src="<?php echo base_url();?>template/assets/uniuyo.png"></img></a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link active" href="<?php echo base_url();?>home/index">
-        <i class="fas fa-home"></i><br>
-        Home</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" href="<?php echo base_url();?>home/ongoing_crimes">
-          <i class="fas fa-bell"></i><br>
-          Ongoing Crimes</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" href="#">
-          <i class="far fa-file-export"></i><br>
-          Generate Report</a>
-    </li>
-      <?php if(isset($name)):?>
-    <?php if($rights=='admin'):?>
-    <li class="nav-item">
-      <a class="nav-link" href="#">
-          <i class="fas fa-user-shield"></i><br>
-          Administrator</a>
+      <a class="nav-link disabled" href="#">
+          <i class="fas fa-user"></i><br>
+          Login</a>
     </li>
   <?php endif;?>
-<?php endif;?>
-
-  <?php if(!isset($name)):?>
-  <li class="nav-item">
-    <a class="nav-link disabled" href="#">
-        <i class="fas fa-user"></i><br>
-        Login</a>
-  </li>
-<?php endif;?>
-  </ul>
-</div>
+    </ul>
+  </div>
 </div>
 <div id="results"></div>
 <div id="main-body" class="container">
@@ -215,6 +218,8 @@ function initMap() {
       var lat = parseFloat(document.getElementById('lat').value);
       var lng = parseFloat(document.getElementById('long').value);
       var block = $('#pac-input').val();
+      var icon = '<?php echo base_url();?>template/assets/marker-red.png';
+      var color = '#111';
   const myLatLng = { lat: lat, lng: lng };
   const map = new google.maps.Map(document.getElementById("map"), {
     zoom: 16,
@@ -229,14 +234,24 @@ function initMap() {
       }
     ]
   });
-
   const infowindow = new google.maps.InfoWindow({
     content: block,
   });
   const marker = new google.maps.Marker({
     position: myLatLng,
     map,
-    label: "C",
+     animation: google.maps.Animation.DROP,
+    icon: {
+      labelOrigin: new google.maps.Point(16,64),
+      url: icon
+    },
+    title: '',
+      label: {
+        text: block,
+        color: color,
+        fontWeight: "",
+        fontSize: "12px"
+      }
   });
     infowindow.open(map, marker);
 

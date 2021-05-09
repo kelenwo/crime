@@ -133,7 +133,7 @@
       <hr>
     <div class="text-center"><p class="card-text">Did you witness this? kindly, Post a review.
       </p>
-<button class="btn btn-primary btn-block"> Review</button>
+<a class="btn btn-primary btn-block" href="<?php echo base_url();?>dashboard/crime_review/<?php echo $req['report_id'];?>"> Review</a>
   </div>
 
 </div>

@@ -11,20 +11,22 @@ Class Login Extends CI_Controller{
   $data['link'] = str_replace('-','/',$link);
   $this->parser->parse('login_return',$data);
   }
-  public function logins() {
-  $login = $this->user_model->login();
+
+  public function login_user() {
+  $login = $this->crime_model->login_user();
   if($login==false) {
-    echo 'Invalid Email/Password';
+    echo 'Invalid Email Address/Password';
   }
-  else{
+  else {
   $pass = $this->input->post('password');
   if(password_verify($pass,$login->password)) {
     $res = get_object_vars($login);
   $store =  $this->session->set_userdata($res);
     echo 'true';
-  } else { echo 'Inavlid Password';}
+  } else { echo 'Password is not correct';}
   }
 }
+
 public function save_user() {
 $verify = $this->user_model->verify();
 if($verify==true) {

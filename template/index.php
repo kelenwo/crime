@@ -17,28 +17,31 @@
  <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
  <script src="<?php echo base_url();?>template/assets/js/jquery.min.js"></script>
   <script src="<?php echo base_url();?>template/assets/js/autocomplete.js"></script>
+   <script src="<?php echo base_url();?>template/assets/js/fa.js"></script>
  <script src="<?php echo base_url();?>template/assets/js/bootstrap.bundle.min.js"></script>
 
- <div id="head">
-   <div class="col-lg-12 col-md-12 row">
-     <div class="col-lg-8 col-md-8">
- <b>CRIME MAPPING SYSTEM</b>
- </div> <div class="col-lg-4 col-md-4">
- <?php if(isset($name)): ?>
- <b style="float: right;">{name} - <a href="<?php echo base_url();?>logout" style="color:#fcc;">Logout </a></b>
- <?php else: ?>
-   <b style="float:right;"><a href="<?php echo base_url();?>login" style="color:#fff;">Login </a></b>
- <?php endif;?>
- </div>
- </div>
- </div>
 
+  <div id="head">
+    <div class="col-lg-12 col-md-12 row">
+      <div class="col-lg-8 col-md-8">
+        <a class="" href="<?php echo base_url();?>">
+          <img class="logo mr-2" src="<?php echo base_url();?>template/assets/uniuyo.png"></img>
+  <b class="mt-1">CRIME MAPPING SYSTEM</b></a>
+  </div> <div class="col-lg-4 col-md-4">
+  <?php if(isset($name)): ?>
+  <b style="float: right;">{name} - <a href="<?php echo base_url();?>logout" style="color:#fcc;">Logout </a></b>
+  <?php else: ?>
+    <b style="float:right;"><a href="<?php echo base_url();?>login" style="color:#fff;">Login </a></b>
+  <?php endif;?>
+  </div>
+  </div>
+  </div>
 
  <div id="menu">
    <div class="row">
      <div class="col-lg-5 col-md-5">
        <div class="col-auto" style="margin-left:0;">
-         <form id="search_crime_reports" autocomplete="off">
+         <form id="search" method="post" action="<?php echo base_url('home/crime_search/location');?>" autocomplete="off">
          <label class="sr-only" for="inlineFormInputGroup">Search Crime, Location</label>
          <div class="input-group mb-3 autocomplete">
            <div class="input-group-prepend">
@@ -48,10 +51,11 @@
            </div>
            <input type="text" name="location" class="form-control input-group-custom" id="location" placeholder="Search Crime, Location">
            <span class="input-group-text input-group-custom" style="margin-left:-8px;">
-             <button type="button" id="go" class="btn btn-primary">GO  <i id="loading" class="fas fa-spinner fa-spin"></i></button>
+             <button type="submit" id="go" class="btn btn-primary">GO  <i id="loading" class="fas fa-spinner fa-spin"></i></button>
            </span>
          </div>
        </div>
+     </form>
 
      </div>
      <div class="col-lg-7 col-md-7">
@@ -76,10 +80,6 @@
 <div id="side">
   <ul class="nav flex-column nav-custom">
     <li class="nav-item">
-      <a class="nav-link active" href="#">
-        <img class="logo" src="<?php echo base_url();?>template/assets/uniuyo.png"></img></a>
-    </li>
-    <li class="nav-item">
       <a class="nav-link active" href="<?php echo base_url();?>home/index">
         <i class="fas fa-home"></i><br>
         Home</a>
@@ -102,19 +102,11 @@
       <?php if(isset($name)):?>
     <?php if($rights=='admin'):?>
     <li class="nav-item">
-      <a class="nav-link" href="#">
+      <a class="nav-link" href="<?php echo base_url();?>home/manage_users">
           <i class="fas fa-user-shield"></i><br>
-          Administrator</a>
+          Manage Users</a>
     </li>
   <?php endif;?>
-<?php endif;?>
-
-  <?php if(!isset($name)):?>
-  <li class="nav-item">
-    <a class="nav-link disabled" href="#">
-        <i class="fas fa-user"></i><br>
-        Login</a>
-  </li>
 <?php endif;?>
   </ul>
 </div>
@@ -148,45 +140,6 @@ autocomplete(document.getElementById("location"), map_data);
   }
   });
 });
-
-  //Trigger the search
-  $('#go').on('click', function() {
-    $('#loading-record').show();
-    $('#loading').show();
-    $.ajax({
-    url: '<?php echo base_url('home/search_crime_reports');?>',
-    data: $('#search_crime_reports').serialize(),
-    type: 'POST',
-    dataType: 'JSON',
-    success:function(data) {
-        //  alert(data[1].latitude);
-    $('#loading-record').hide();
-    $('#loading').hide();
-        if(data=='false') {
-    $('#records').html('0 Record');
-  } else {
-    $.ajax({
-    url: '<?php echo base_url('home/get_map_data_where');?>',
-    data: $('#search_crime_reports').serialize(),
-    type: 'POST',
-    dataType: 'JSON',
-    success:function(block) {
-$('#lat').val(block.latitude);
-$('#long').val(block.longitude);
-$('#ref').trigger('click');
-    }
-  });
-    var len = data.length;
-    if(len>1) {
-      $('#records').html(len+ '&nbsp;Records');
-    } else if(len=1) {
-        $('#records').html(len+ '&nbsp;Record');
-      }
-    }
-  }
-    });
-  });
-
 });
 
 function get_result() {
@@ -197,8 +150,8 @@ function get_result() {
   dataType: 'JSON',
   success:function(crimes) {
     const map = new google.maps.Map(document.getElementById("map"), {
-    zoom: 16,
-    center: new google.maps.LatLng(-33.92, 151.25),
+    zoom: 15,
+    center: new google.maps.LatLng(5.028829, 7.978997),
     styles: [
       {
         "featureType": "all",
@@ -209,10 +162,16 @@ function get_result() {
       }
     ]
     });
-   for (let i = 1; i < crimes.length; i++) {
+   for (i = 0; i < crimes.length; i++) {
      var lat = parseFloat(crimes[i].latitude);
      var lng = parseFloat(crimes[i].longitude);
-     var block = crimes[i].blocks;
+     var block = crimes[i].location;
+     var status = crimes[i].status;
+     var report_id = crimes[i].report_id;
+//alert(report_id);
+
+var icon = '<?php echo base_url();?>template/assets/marker-red.png';
+var color = '#111';
    const myLatLng = { lat: lat, lng: lng };
 
    const infowindow = new google.maps.InfoWindow({
@@ -222,16 +181,31 @@ function get_result() {
    position: myLatLng,
    map,
    animation: google.maps.Animation.DROP,
-   label: {
-fontWeight: 'bold',
-color: 'white',
-text: 'C',
-outline: 'black',
+   icon: {
+  labelOrigin: new google.maps.Point(16,64),
+  url: icon
 },
-
+title: report_id,
+  label: {
+    text: block,
+    color: color,
+    fontWeight: "",
+    fontSize: "12px"
+}
    });
    infowindow.open(map, marker);
-
+  // marker.addListener("click", () => {
+//     window.location.href = '<?php echo base_url();?>home/view_crime/review/'+report_id;
+//   });
+//alert(marker['title']);
+marker.addListener("click", () => {
+  infowindow.close();
+  window.location.href = '<?php echo base_url();?>home/view_crime/review/'+marker['title'];
+});
+   google.maps.event.addListener(marker, "click", toggleBounce, () => {
+     infowindow.setContent(place.name || "");
+     infowindow.open(map);
+   });
 
 }
 }
@@ -261,27 +235,6 @@ function initMap() {
 
 get_result();
 
-$('#ref').on('click', function() {
-  var lat = parseFloat(document.getElementById('lat').value);
-  var lng = parseFloat(document.getElementById('long').value);
-  var block = $('#location').val();
-const myLatLng = { lat: lat, lng: lng };
-const map = new google.maps.Map(document.getElementById("map"), {
-zoom: 16,
-center: myLatLng,
-});
-
-const infowindow = new google.maps.InfoWindow({
-content: block,
-});
-const marker = new google.maps.Marker({
-position: myLatLng,
-map,
-label: "C",
-});
-infowindow.open(map, marker);
-
-});
 }
 
 

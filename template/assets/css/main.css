@@ -23,6 +23,10 @@ font-weight: bold;
 font-size: 20px;
 color: #FFFFFF;
 }
+#head img {
+  width: 40px !important;
+  height: 40px !important;
+}
 
 #menu {
 margin-bottom: 10px;
@@ -78,7 +82,7 @@ background: #FFFAFA;
 width: 83%;
 height: 100%;
 left: 17%;
-top: 155px;
+top: 163px;
 background: #FFF;
 padding: 0px;
 margin: 5px;
@@ -183,11 +187,13 @@ margin: 5px;
 }
 .card-top {
   width: 100%;
-  min-height: 200px;
+  min-height: 170px;
   background-color: #444;
 }
 .card-top hr {
-  border: 1px #fff solid !important;
+  margin-top: 0 !important;
+  border: 0.1px #fff solid !important;
+  width: 130%;
 }
 .bg-none {
   background-color: #fff !important;

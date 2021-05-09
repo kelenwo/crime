@@ -2,9 +2,13 @@
 class Home extends CI_Controller {
   public function __construct()  {
           parent::__construct();
-if(empty($this->session->email)) {
-    header('Location:'.base_url().'ucp/login/signin/return/'.str_replace('/','-',uri_string()));
-}
+          if(empty($this->session->email)) {
+            if(empty(uri_string())) {
+           header('Location:'.base_url().'ucp/login');
+            } else {
+              header('Location:'.base_url().'ucp/login/signin/return/'.str_replace('/','-',uri_string()));
+            }
+          }
 }
         public function index()
         {
@@ -53,9 +57,6 @@ if(empty($this->session->email)) {
         public function crime_reports()
         {
           $data = $this->session->userdata();
-          if(empty($this->session->name)) {
-              header('Location:'.base_url().'login');
-          }
           $data['reports'] = $this->crime_model->get_crime_reports();
           $data['title'] = "REPORT CRIME- CRIME MAPPING SYSTEM";
                 // $this->load->view('head', $data);
@@ -65,9 +66,53 @@ if(empty($this->session->email)) {
         public function ongoing_crimes()
         {
           $data = $this->session->userdata();
-          $data['title'] = "REPORT CRIME- CRIME MAPPING SYSTEM";
+          $data['title'] = "ONGOING CRIME- CRIME MAPPING SYSTEM";
                 // $this->load->view('head', $data);
           $this->parser->parse('ongoing_crime', $data);
+        }
+
+        public function manage_users()
+        {
+          $data = $this->session->userdata();
+          $get = $this->crime_model->get_users();
+          $arr = array();
+          foreach($get as $res) {
+            $rep = $this->crime_model->count_reports_user($res['name']);
+            $frep = $this->crime_model->count_false_reports_user($res['name']);
+            $rev = $this->crime_model->count_reviews_user($res['name']);
+            $new = array(
+                  'id' => $res['id'],
+                  'name' => $res['name'],
+                  'email' => $res['email'],
+                  'phone' => $res['phone'],
+                  'rights' => $res['rights'],
+                  'account_status' => $res['account_status'],
+                  'date' => $res['date'],
+                  'last_login' => $res['last_login'],
+                  'reports' => $rep,
+                  'false_reports' => $frep,
+                  'reviews' => $rev
+                   );
+            array_push($arr,$new);
+          }
+          
+          //var_dump($arr);
+          $data['users'] = $arr;
+          $data['title'] = "Manage Users- CRIME MAPPING SYSTEM";
+                // $this->load->view('head', $data);
+          $this->parser->parse('manage_users', $data);
+        }
+
+        public function view_crime($review, $id)
+        {
+
+          $data = $this->session->userdata();
+          $data['reports'] = get_object_vars($this->crime_model->get_crime_reports_for_review($id));
+          $data['reviews'] = $this->crime_model->get_crime_review($id);
+          $data['title'] = "CRIME REVIEWS - CRIME MAPPING SYSTEM";
+        //  var_dump($data['reviews']);
+                // $this->load->view('head', $data);
+          $this->parser->parse('reviews', $data);
         }
 
         public function map_data()
@@ -78,21 +123,6 @@ if(empty($this->session->email)) {
           $this->parser->parse('map_data', $data);
         }
 
-
-        public function login_user() {
-        $login = $this->crime_model->login_user();
-        if($login==false) {
-          echo 'Invalid Email Address/Password';
-        }
-        else {
-        $pass = $this->input->post('password');
-        if(password_verify($pass,$login->password)) {
-          $res = get_object_vars($login);
-        $store =  $this->session->set_userdata($res);
-          echo 'true';
-        } else { echo 'Password is not correct';}
-        }
-      }
 
         public function save_user_data() {
           $email_check = $this->crime_model->email_check();
@@ -140,17 +170,32 @@ if(empty($this->session->email)) {
             }
             public function get_map_data_where() {
                 $data = $this->crime_model->get_map_data_where($this->input->post('location'));
-              echo json_encode($data);
+              echo json_encode(
+                $data);
               }
 
           public function get_crimes() {
-              $req = $this->crime_model->get_crimes();
-              $arr = array($req);
+              $req = $this->crime_model->get_crimes_all();
+              $arr = array();
                 foreach($req as $res) {
-                $val = $this->crime_model->get_map_data_where($res['location']);
+                  $val = $this->crime_model->get_map_data_where($res['location']);
+                $new = array(
+                      'id' => $res['id'],
+                      'type' => $res['type'],
+                      'description' => $res['description'],
+                      'location' => $res['location'],
+                      'report_by' => $res['report_by'],
+                      'status' => $res['status'],
+                      'report_id' => $res['report_id'],
+                      'date' => $res['date'],
+                      'time' => $res['time'],
+                      'latitude' => $val->latitude,
+                      'longitude' => $val->longitude
+                       );
 
-                array_push($arr,$val);
-              }
+                array_push($arr,$new);
+                  }
+                //  var_dump($arr);
             echo json_encode($arr);
             }
           public function search_crime_reports() {
