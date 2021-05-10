@@ -170,4 +170,29 @@ Class Crime_model Extends CI_model {
   $this->db->from('crime_review');
   return $this->db->count_all_results();
   }
+
+  public function update_user_auth() {
+    $data = array(
+      'rights' => 1,
+      'account_state' => 'subscriber',
+    );
+  $this->db->where('email',$this->input->post('email'));
+  $query = $this->db->update('users', $data);
+  if($query) {
+    return true;
+  } else {
+    return mysqli_error();
+  }
+}
+
+public function update_user() {
+$this->db->where('id',$this->input->post('id'));
+$query = $this->db->update('users', $this->input->post());
+if($query) {
+return true;
+} else {
+return false;
+}
+
+}
 }

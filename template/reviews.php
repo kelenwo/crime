@@ -168,7 +168,11 @@ endif;?>
       <div class="card">
 <div class="card-top">
   <div class="m-3 center text-white">
-  <div class="mr-2" style="display:inline-block;font-size:50px;color:DodgerBlue"><i class="fad fa-location-circle"></i></i></div>
+  <div class="mr-2 mb-2" style="display:inline-block;">
+    <span class="fa-stack text-info fa-2x" style="font-size: 1.5em !important;">
+    <i class="fas fa-circle fa-stack-2x"></i>
+    <i class="fas fa-location-arrow fa-stack-1x fa-inverse"></i>
+    </span></div>
   <h4 style="display:inline-block"><?php echo $reports['type'];?></h4>
 <hr>
   <span class="f-right"><?php echo $reports['location'];?></span><br>

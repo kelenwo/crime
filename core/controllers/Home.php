@@ -95,7 +95,7 @@ class Home extends CI_Controller {
                    );
             array_push($arr,$new);
           }
-          
+
           //var_dump($arr);
           $data['users'] = $arr;
           $data['title'] = "Manage Users- CRIME MAPPING SYSTEM";
@@ -209,6 +209,14 @@ class Home extends CI_Controller {
             echo json_encode($data);
           }
 
+            }
+
+            public function update_user() {
+            $update = $this->crime_model->update_user();
+            if($update==true) {
+            echo 'saved';
+            } else {
+            echo 'fail';}
             }
 
       }

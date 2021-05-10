@@ -238,10 +238,11 @@
 <small><?php echo $req['email'];?></small></div>
 
            <div class="text-sm text-primary text-capitalize mb-2"><small class="text-success mb-1">Rights:</small><br>
+             <form id="edit_user-<?php echo $req['id'];?>">
              <select name="rights" class="form-control">
                <option value="user" <?php if($req['rights']=='user') {echo 'selected';};?>>User</option>
                <option value="administrator" <?php if($req['rights']=='administrator') {echo 'selected';};?>>Administrator</option>
-              </select></div>
+             </select></form></div>
        </div></div>
 
          <div class="col-sm-5 col-md-5 ml-4 mt-3">
@@ -263,7 +264,7 @@
 
        <div class="modal-footer">
          <div class="form-group text-center center">
-           <a class="btn pl-5 pr-5 btn-success" href="#edit_user_<?php echo $req['id'];?>" data-toggle="modal"><i class="far fa-edit"></i> Save Edit &nbsp;</a>
+           <button type="button" class="btn pl-5 pr-5 mr-3 btn-primary" id="save-user-edit-<?php echo $req['id'];?>"><i class="far fa-edit"></i> Save Edit <i class="fas fa-cog fa-spin" id="loadinguser-<?php echo $req["id"];?>"></i>&nbsp;</a>
            <button class="btn pl-5 pr-5 btn-info" type="button" data-dismiss="modal" aria-label="Close"><i class="fas fa-times"></i> &nbsp;Close</button>
         </div>
        </div>
@@ -273,6 +274,48 @@
   <!-- Edituser modal end -->
 <!-- delete contract -->
 </tr>
+<script>
+$(document).ready(function() {
+
+$('#loadinguser-<?php echo $req["id"];?>').hide();
+  $("#del-user-<?php echo $req['id'];?>").click(function(){
+    if (confirm("Do you want to delete?")){
+      $.ajax({
+        url:'<?php echo base_url()."home/delete_item";?>',
+        type: "POST",
+        data: $('#del_users-<?php echo $req["id"];?>').serialize(),
+        success:function(data) {
+  if(data=='true') {
+  window.location.href = "<?php echo $_SERVER['PHP_SELF'];?>";
+  } else {
+    alert(data);
+  }
+  }
+  });
+    } {
+      return false;
+    }
+  });
+  //Save Issue edit
+  $("#save-user-edit-<?php echo $req['id'];?>").click(function() {
+  $("#loadinguser-<?php echo $req['id'];?>").show();
+  $.ajax({
+    url:'<?php echo base_url()."home/update_user";?>',
+    type: "POST",
+    data: $("#edit_user-<?php echo $req['id'];?>").serialize(),
+    success:function(data) {
+  $("#loadinguser-<?php echo $req['id'];?>").hide();
+    if(data=="saved") {
+  alert('User data has been updated successfully!!');
+  window.location.href = "<?php echo $_SERVER['PHP_SELF'];?>";
+    } else {
+alert(data);
+    }
+    }
+  });
+  });
+});
+</script>
 <?php endforeach;?>
 <?php endif;?>
 </tbody>
