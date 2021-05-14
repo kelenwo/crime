@@ -18,6 +18,7 @@
  <script src="<?php echo base_url();?>template/assets/js/jquery.min.js"></script>
   <script src="<?php echo base_url();?>template/assets/js/autocomplete.js"></script>
    <script src="<?php echo base_url();?>template/assets/js/fa.js"></script>
+   <script src="<?php echo base_url();?>template/assets/js/dist.js"></script>
  <script src="<?php echo base_url();?>template/assets/js/bootstrap.bundle.min.js"></script>
 
 
@@ -99,15 +100,11 @@
           <i class="far fa-file-export"></i><br>
           Crime Reports</a>
     </li>
-      <?php if(isset($name)):?>
-    <?php if($rights=='admin'):?>
     <li class="nav-item">
       <a class="nav-link" href="<?php echo base_url();?>home/manage_users">
           <i class="fas fa-user-shield"></i><br>
           Manage Users</a>
     </li>
-  <?php endif;?>
-<?php endif;?>
   </ul>
 </div>
 </div>
@@ -126,6 +123,8 @@
 $(document).ready(function(){
   $('#loading-record').hide();
   $('#loading').hide();
+
+  //alert(closest);
 
 $("#location").keyup(function(){
   $.ajax({
@@ -168,6 +167,8 @@ function get_result() {
      var block = crimes[i].location;
      var status = crimes[i].status;
      var report_id = crimes[i].report_id;
+     var lat2 = 5.041476;
+     var lng2 = 7.975939;
 //alert(report_id);
 
 var icon = '<?php echo base_url();?>template/assets/marker-red.png';

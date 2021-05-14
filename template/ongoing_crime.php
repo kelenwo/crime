@@ -98,29 +98,82 @@
             <i class="far fa-file-export"></i><br>
             Crime Reports</a>
       </li>
-        <?php if(isset($name)):?>
-      <?php if($rights=='admin'):?>
       <li class="nav-item">
-        <a class="nav-link" href="#">
+        <a class="nav-link" href="<?php echo base_url();?>home/manage_users">
             <i class="fas fa-user-shield"></i><br>
-            Administrator</a>
+            Manage Users</a>
       </li>
-    <?php endif;?>
-  <?php endif;?>
-
-    <?php if(!isset($name)):?>
-    <li class="nav-item">
-      <a class="nav-link disabled" href="#">
-          <i class="fas fa-user"></i><br>
-          Login</a>
-    </li>
-  <?php endif;?>
     </ul>
   </div>
 </div>
 
-<div id="main-body" class="container">
-<div id="map"></div>
+<div id="main-body">
+<div class="panel">
+  <div class="panel-heading">
+    <h4>Dashboard</h4>
+  </div>
+  <div class="panel-body row">
+    <div class="col-md-12">
+      <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        <strong>Warning!</strong> Notice of ongoing crime(s). Post review to help us and make sure to stay away from the scene(s)
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <?php foreach($reports as $req): ?>
+<div class="card mt-2">
+  <div class="card-body">
+    <span class="mb-1"><strong><?php echo $req['type'];?></strong></span>
+    <span class="f-right"><span id="id<?php echo $req['id'];?>"></span> metres away</span><br>
+      <span style="color:green; font-weight:bold;" class="mb-1"><i class="fas fa-map-marker-alt text-danger"></i> <?php echo $req['location'];?></span>
+      <span class="f-right"><?php echo $req['date'];?> @ <?php echo $req['time'];?></span>
+
+      <hr>
+    <div class="text-center"><p class="card-text">Did you witness this? kindly, Post a review.
+      </p>
+<a class="btn btn-primary btn-block" href="<?php echo base_url();?>home/view_crime/review/<?php echo $req['report_id'];?>"> See Details</a>
+  </div>
+
+</div>
+</div>
+<script>
+$(document).ready(function() {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const pos = {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude,
+        };
+          var lat2 = position.coords.latitude;
+          var lng2 = position.coords.longitude;
+          var lat1 = <?php echo $req['latitude'];?>;
+          var lng1 = <?php echo $req['longitude'];?>;
+        var distance = Math.round(haversine_distance(lat1,lat2,lng1,lng2));
+        //alert(distance);
+        $('#id<?php echo $req['id'];?>').html(distance);
+
+      },
+
+      () => {
+        handleLocationError(true, infoWindow, map.getCenter());
+      }
+    );
+
+  } else {
+    // Browser doesn't support Geolocation
+    handleLocationError(false, infoWindow, map.getCenter());
+  }
+
+});
+</script>
+<?php endforeach;?>
+</div>
+
+</div>
+<div id="map" style="display:none;"></div>
+
+</div>
 </div>
 
 <input type="hidden" id="lat" >
@@ -218,8 +271,8 @@ function get_result() {
 if(status=="active") {
 var icon = '<?php echo base_url();?>template/assets/marker-red.png';
 var color = 'red';
-} else if(status=="closed") {
-var icon = 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png';
+} else if(status=="saved") {
+var icon = '<?php echo base_url();?>template/assets/marker-black.png';
 var color = '#111';
 }
    const myLatLng = { lat: lat, lng: lng };

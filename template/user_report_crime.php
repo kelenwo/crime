@@ -145,6 +145,14 @@
       <input name="time" type="time" value="<?php echo date('H:m:s');?>" class="form-control" placeholder="time">
       </div>
       <div class="form-group">
+        <label>Latitude</label>
+      <input name="latitude" id="latitude" type="text" class="form-control" placeholder="Longitude">
+      </div>
+      <div class="form-group">
+        <label>Longitude</label>
+      <input name="longitude" id="longitude" type="text" class="form-control" placeholder="Latitude">
+      </div>
+      <div class="form-group">
         <label>Description</label>
       <textarea cols="3" class="form-control" name="description" placeholder="Description (optional)"></textarea>
       </div>
@@ -155,10 +163,15 @@
 </div>
 </form>
 </div>
-<div id="map" style="display:none;"></div>
-
+<div id="map" style="display:none"></div>
+<form id="latt">
+  <input type="hidden" name="latitude" id="lat">
+</form>
 </div>
 </div>
+<script async
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAj5lKUoRNwRa0maEalb4F-ATTiNzSwK1g&libraries=places&callback=initMap">
+</script>
 <script>
 $(document).ready(function() {
   $('#loading').hide();
@@ -195,8 +208,87 @@ $(document).ready(function() {
   }
   });
   });
+  });
 
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const pos = {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude,
+        };
+          $('#latitude').val(position.coords.latitude);
+          $('#longitude').val(position.coords.longitude);
 
+          $.ajax({
+          url: '<?php echo base_url('home/get_map_data_all');?>',
+          type: 'GET',
+          dataType: 'JSON',
+          success:function(block) {
 
-});
+            var counts = block.lat,
+              goal = 5.04103800;
+
+            var closest = counts.reduce(function(prev, curr) {
+              return (Math.abs(curr - goal) < Math.abs(prev - goal) ? curr : prev);
+            });
+
+            $('#lat').val(closest);
+            $.ajax({
+            url: '<?php echo base_url('home/get_map_data_block');?>',
+            type: 'POST',
+          data: $('#latt').serialize(),
+            dataType: 'JSON',
+            success:function(data) {
+            //  alert(data);
+            $('#location').val(data.blocks);
+            }
+          });
+          }
+        });
+
+      },
+
+      () => {
+        handleLocationError(true, infoWindow, map.getCenter());
+      }
+    );
+
+  } else {
+    // Browser doesn't support Geolocation
+    handleLocationError(false, infoWindow, map.getCenter());
+  }
+
+  let map;
+  let service;
+  let infowindow;
+
+  function initMap() {
+    const home = new google.maps.LatLng(5.028829, 7.978997);
+    infoWindow = new google.maps.InfoWindow();
+    map = new google.maps.Map(document.getElementById("map"), {
+      center: home,
+      zoom: 15,
+      styles: [
+        {
+          "featureType": "all",
+          "elementType": "labels.icon",
+          "stylers": [
+            { "visibility": "off" }
+          ]
+        }
+      ]
+    });
+
+  }
+
+  function handleLocationError(browserHasGeolocation, infoWindow, pos) {
+    infoWindow.setPosition(pos);
+    infoWindow.setContent(
+      browserHasGeolocation
+        ? "Error: The Geolocation service failed."
+        : "Error: Your browser doesn't support geolocation."
+    );
+    infoWindow.open(map);
+  }
 </script>

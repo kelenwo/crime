@@ -14,9 +14,7 @@
   <link href="<?php echo base_url();?>template/assets/css/bootstrap.css" rel="stylesheet">
   <link href="<?php echo base_url();?>template/assets/css/all.css" rel="stylesheet">
   </head>
- <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
  <script src="<?php echo base_url();?>template/assets/js/jquery.min.js"></script>
-  <script src="<?php echo base_url();?>template/assets/js/custom_map.js"></script>
     <script src="<?php echo base_url();?>template/assets/js/fa.js"></script>
 
     <div id="head">
@@ -85,23 +83,11 @@
               <i class="far fa-file-export"></i><br>
               Crime Reports</a>
         </li>
-          <?php if(isset($name)):?>
-        <?php if($rights=='admin'):?>
         <li class="nav-item">
-          <a class="nav-link" href="#">
+          <a class="nav-link" href="<?php echo base_url();?>home/manage_users">
               <i class="fas fa-user-shield"></i><br>
-              Administrator</a>
+              Manage Users</a>
         </li>
-      <?php endif;?>
-    <?php endif;?>
-
-      <?php if(!isset($name)):?>
-      <li class="nav-item">
-        <a class="nav-link disabled" href="#">
-            <i class="fas fa-user"></i><br>
-            Login</a>
-      </li>
-    <?php endif;?>
       </ul>
     </div>
   </div>
@@ -119,7 +105,7 @@
     <a class="nav-link  active" href="#"><h5>REVIEWS</h5></a>
   </li>
   <li class="nav-item">
-    <a class="nav-link" href="#"><h5>2</h5></a>
+    <a class="nav-link" href="#"><h5>{reviews_count}</h5></a>
   </li>
 </ul>
 <?php if(empty($reviews)):?>
@@ -181,25 +167,83 @@ endif;?>
 </div>
   <div class="card-body">
     <h5 class="card-title">Description</h5>
-    <?php if(empty($res['description'])): ?>
+    <?php if(empty($reports['description'])): ?>
       <p class="card-text text-center">No description Added.</p>
         <?php else: ?>
     <p class="card-text"><?php echo $reports['description'];?></p>
   <?php endif;?>
     <div class="row">
-    <div class="col-md-6 col-sm-6 col-6"><button class="btn btn-outline-success my-2 my-sm-0 btn-block">
-      <strong>Save</strong></button></div>
-    <div class="col-md-6 col-sm-6 col-6"><button class="btn btn-outline-danger my-2 my-sm-0 btn-block">
-      <strong>Blacklist</strong></button></div>
+    <div class="col-md-6 col-sm-6 col-6">
+      <button id="save" type="button" class="btn <?php if($reports['status']=='saved' && $reports['verify']=='active') {echo 'btn-success';} else{ echo 'btn-outline-success';} ?> my-2 my-sm-0 btn-block" <?php if($reports['status']=='saved') {echo 'disabled';} ?>>
+      <strong>Save <i id="loading-save" class="fas fa-cog fa-spin"></i></strong></button></div>
+    <div class="col-md-6 col-sm-6 col-6">
+      <button id="blacklist" type="button" class="btn <?php if($reports['status']=='saved' && $reports['verify']=='blacklist') {echo 'btn-danger';} else{ echo 'btn-outline-danger';} ?> my-2 my-sm-0 btn-block" <?php if($reports['status']=='saved') {echo 'disabled';}?>>
+      <strong>Blacklist <i id="loading-blacklist" class="fa fa-cog fa-spin"></i></strong></button></div>
     </div>
   </div>
 </div>
     </div>
-
-<div id="map" style="display:none;"></div>
-
+<form id="form">
+  <input type="hidden" name="report_id" value="<?php echo $reports['report_id'];?>">
+    <input type="hidden" name="verify" id="verify">
+    <input type="hidden" name="status" id="status">
+</form>
 </div>
 </div>
-<script async
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAj5lKUoRNwRa0maEalb4F-ATTiNzSwK1g&libraries=places&callback=initMap">
+<script>
+$('#loading-save').hide();
+$('#loading-blacklist').hide();
+
+$('#save').on('click', function() {
+  $('#loading-save').show();
+  $('#verify').val('active');
+  $('#status').val('saved');
+  $.ajax({
+  url: '<?php echo base_url('home/update_crime_report');?>',
+  data: $('#form').serialize(),
+  type: 'POST',
+  dataType: 'JSON',
+  success:function(data) {
+      //  alert(data[1].latitude);
+  $('#loading-save').hide();
+      if(data==1) {
+        $('#save').removeClass('btn-outline-success');
+        $('#save').addClass('btn-success');
+        $('#save').attr('disabled','disabled');
+        $('#blacklist').attr('disabled','disabled');
+      alert('Report have been saved successfully');
+        } else {
+alert(data);
+}
+
+}
+  });
+});
+
+$('#blacklist').on('click', function() {
+  $('#loading-blacklist').show();
+  $('#verify').val('blacklist');
+  $('#status').val('saved');
+  $.ajax({
+  url: '<?php echo base_url('home/update_crime_report');?>',
+  data: $('#form').serialize(),
+  type: 'POST',
+  dataType: 'JSON',
+  success:function(data) {
+      //  alert(data[1].latitude);
+  $('#loading-blacklist').hide();
+      if(data==1) {
+        $('#blacklist').addClass('btn-danger');
+        $('#blacklist').removeClass('btn-outline-danger');
+        $('#save').attr('disabled','disabled');
+        $('#blacklist').attr('disabled','disabled');
+      alert('Report have been blacklisted successfully');
+        }
+         else {
+   alert(data);
+ }
+}
+  });
+});
+
 </script>

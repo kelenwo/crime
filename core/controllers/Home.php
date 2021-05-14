@@ -66,6 +66,7 @@ class Home extends CI_Controller {
         public function ongoing_crimes()
         {
           $data = $this->session->userdata();
+          $data['reports'] = $this->crime_model->get_crime_reports_all();
           $data['title'] = "ONGOING CRIME- CRIME MAPPING SYSTEM";
                 // $this->load->view('head', $data);
           $this->parser->parse('ongoing_crime', $data);
@@ -109,6 +110,7 @@ class Home extends CI_Controller {
           $data = $this->session->userdata();
           $data['reports'] = get_object_vars($this->crime_model->get_crime_reports_for_review($id));
           $data['reviews'] = $this->crime_model->get_crime_review($id);
+          $data['reviews_count'] = $this->crime_model->count_crime_reviews($id);
           $data['title'] = "CRIME REVIEWS - CRIME MAPPING SYSTEM";
         //  var_dump($data['reviews']);
                 // $this->load->view('head', $data);
@@ -174,30 +176,50 @@ class Home extends CI_Controller {
                 $data);
               }
 
-          public function get_crimes() {
-              $req = $this->crime_model->get_crimes_all();
-              $arr = array();
-                foreach($req as $res) {
-                  $val = $this->crime_model->get_map_data_where($res['location']);
-                $new = array(
-                      'id' => $res['id'],
-                      'type' => $res['type'],
-                      'description' => $res['description'],
-                      'location' => $res['location'],
-                      'report_by' => $res['report_by'],
-                      'status' => $res['status'],
-                      'report_id' => $res['report_id'],
-                      'date' => $res['date'],
-                      'time' => $res['time'],
-                      'latitude' => $val->latitude,
-                      'longitude' => $val->longitude
-                       );
+              public function get_map_data_block() {
+                  $data = $this->crime_model->get_map_data_block($this->input->post('latitude'));
+                echo json_encode($data);
+                }
 
-                array_push($arr,$new);
-                  }
-                //  var_dump($arr);
-            echo json_encode($arr);
-            }
+              public function get_crimes() {
+                  $req = $this->crime_model->get_crimes_all();
+                  $arr = array();
+                    foreach($req as $res) {
+                      $val = $this->crime_model->get_map_data_all($res['latitude']);
+                    $new = array(
+                          'id' => $res['id'],
+                          'type' => $res['type'],
+                          'description' => $res['description'],
+                          'location' => $res['location'],
+                          'report_by' => $res['report_by'],
+                          'status' => $res['status'],
+                          'report_id' => $res['report_id'],
+                          'date' => $res['date'],
+                          'time' => $res['time'],
+                          'latitude' => $res['latitude'],
+                          'longitude' => $res['longitude']
+                           );
+
+                    array_push($arr,$new);
+                      }
+                    //  var_dump($arr);
+                echo json_encode($arr);
+                }
+
+            public function get_map_data_all() {
+                $req = $this->crime_model->get_map_data_all();
+                $arr = array(
+                  'lat' => array(),
+                  'lng' => array()
+                );
+                foreach($req as $res) {
+                  array_push($arr['lat'],$res['latitude']);
+                  array_push($arr['lng'],$res['longitude']);
+                }
+                  //var_dump($arr);
+              echo json_encode($arr);
+              }
+
           public function search_crime_reports() {
         //    if(empty($this->input->post('sort')) {
           //    $sort =
@@ -217,6 +239,11 @@ class Home extends CI_Controller {
             echo 'saved';
             } else {
             echo 'fail';}
+            }
+
+            public function update_crime_report() {
+            $update = $this->crime_model->update_crime_report();
+            echo $update;
             }
 
       }

@@ -65,11 +65,7 @@
 <div id="side">
   <ul class="nav flex-column nav-custom">
     <li class="nav-item">
-      <a class="nav-link active" href="#">
-        <img class="logo" src="<?php echo base_url();?>template/assets/uniuyo.png"></img></a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link active" href="#">
+      <a class="nav-link active" href="<?php echo base_url();?>home/index">
         <i class="fas fa-home"></i><br>
         Home</a>
     </li>
@@ -83,25 +79,16 @@
           <i class="far fa-file-export"></i><br>
           Generate Report</a>
     </li>
-      <?php if(isset($name)):?>
-    <?php if($rights=='admin'):?>
     <li class="nav-item">
-      <a class="nav-link" href="#">
-          <i class="fas fa-user-shield"></i><br>
-          Administrator
-210428-214IYF
-        </a>
+      <a class="nav-link" href="<?php echo base_url('crime_reports');?>">
+          <i class="far fa-file-export"></i><br>
+          Crime Reports</a>
     </li>
-  <?php endif;?>
-<?php endif;?>
-
-  <?php if(!isset($name)):?>
-  <li class="nav-item">
-    <a class="nav-link disabled" href="#">
-        <i class="fas fa-user"></i><br>
-        Login</a>
-  </li>
-<?php endif;?>
+    <li class="nav-item">
+      <a class="nav-link" href="<?php echo base_url();?>home/manage_users">
+          <i class="fas fa-user-shield"></i><br>
+          Manage Users</a>
+    </li>
   </ul>
 </div>
 </div>

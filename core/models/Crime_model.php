@@ -63,9 +63,23 @@ Class Crime_model Extends CI_model {
       return $query->result_array();
     }
 
+    public function get_map_data_all() {
+
+      $this->db->select('*');
+      $query = $this->db->get('map_data');
+      return $query->result_array();
+    }
+
     public function get_map_data_where($var) {
         $this->db->like('blocks',$var);
       $this->db->select('*');
+      $query = $this->db->get('map_data');
+      return $query->row();
+    }
+
+    public function get_map_data_block($var) {
+      $this->db->select('*');
+      $this->db->where('latitude',$var);
       $query = $this->db->get('map_data');
       return $query->row();
     }
@@ -171,6 +185,12 @@ Class Crime_model Extends CI_model {
   return $this->db->count_all_results();
   }
 
+  public function count_crime_reviews($id) {
+  $this->db->where('report_id',$id);
+  $this->db->from('crime_review');
+  return $this->db->count_all_results();
+  }
+
   public function update_user_auth() {
     $data = array(
       'rights' => 1,
@@ -192,6 +212,17 @@ if($query) {
 return true;
 } else {
 return false;
+}
+
+}
+
+public function update_crime_report() {
+$this->db->where('report_id',$this->input->post('report_id'));
+$query = $this->db->update('crime_report', $this->input->post());
+if($query) {
+return true;
+} else {
+ return mysqli_error();
 }
 
 }

@@ -96,23 +96,11 @@
             <i class="far fa-file-export"></i><br>
             Crime Reports</a>
       </li>
-        <?php if(isset($name)):?>
-      <?php if($rights=='admin'):?>
       <li class="nav-item">
-        <a class="nav-link" href="#">
+        <a class="nav-link" href="<?php echo base_url();?>home/manage_users">
             <i class="fas fa-user-shield"></i><br>
-            Administrator</a>
+            Manage Users</a>
       </li>
-    <?php endif;?>
-  <?php endif;?>
-
-    <?php if(!isset($name)):?>
-    <li class="nav-item">
-      <a class="nav-link disabled" href="#">
-          <i class="fas fa-user"></i><br>
-          Login</a>
-    </li>
-  <?php endif;?>
     </ul>
   </div>
 </div>

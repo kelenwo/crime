@@ -22,7 +22,9 @@
   <div id="head">
     <div class="col-lg-12 col-md-12 row">
       <div class="col-lg-8 col-md-8">
-  <b>CRIME MAPPING SYSTEM</b>
+        <a class="" href="<?php echo base_url();?>">
+          <img class="logo mr-2" src="<?php echo base_url();?>template/assets/uniuyo.png"></img>
+  <b class="mt-1">CRIME MAPPING SYSTEM</b></a>
   </div> <div class="col-lg-4 col-md-4">
   <?php if(isset($name)): ?>
   <b style="float: right;">{name} - <a href="<?php echo base_url();?>logout" style="color:#fcc;">Logout </a></b>
@@ -64,11 +66,7 @@
 <div id="side">
   <ul class="nav flex-column nav-custom">
     <li class="nav-item">
-      <a class="nav-link active" href="#">
-        <img class="logo" src="<?php echo base_url();?>template/assets/uniuyo.png"></img></a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link active" href="#">
+      <a class="nav-link active" href="<?php echo base_url();?>home/index">
         <i class="fas fa-home"></i><br>
         Home</a>
     </li>
@@ -81,6 +79,11 @@
       <a class="nav-link" href="#">
           <i class="far fa-file-export"></i><br>
           Generate Report</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="<?php echo base_url('crime_reports');?>">
+          <i class="far fa-file-export"></i><br>
+          Crime Reports</a>
     </li>
     <li class="nav-item">
       <a class="nav-link" href="<?php echo base_url();?>home/manage_users">

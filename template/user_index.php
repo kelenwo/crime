@@ -14,9 +14,9 @@
   <link href="<?php echo base_url();?>template/assets/css/bootstrap.css" rel="stylesheet">
 <link href="<?php echo base_url();?>template/assets/css/all.css" rel="stylesheet">
   </head>
- <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
  <script src="<?php echo base_url();?>template/assets/js/jquery.min.js"></script>
   <script src="<?php echo base_url();?>template/assets/js/custom_map.js"></script>
+    <script src="<?php echo base_url();?>template/assets/js/dist.js"></script>
  <script src="<?php echo base_url();?>template/assets/js/bootstrap.bundle.min.js"></script>
 
   <div id="head">
@@ -126,7 +126,7 @@
 <div class="card mt-2">
   <div class="card-body">
     <span class="mb-1"><strong><?php echo $req['type'];?></strong></span>
-    <span class="f-right mb-1">4 metres away</span><br>
+    <span class="f-right mb-1"><span id="id<?php echo $req['id'];?>"></span> metres away</span>
       <span style="color:green; font-weight:bold;" class="mb-1"><i class="fas fa-map-marker-alt text-danger"></i> <?php echo $req['location'];?></span>
       <span class="f-right mb-1"><?php echo $req['date'];?> @ <?php echo $req['time'];?></span>
 
@@ -138,6 +138,37 @@
 
 </div>
 </div>
+<script>
+$(document).ready(function() {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const pos = {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude,
+        };
+          var lat2 = position.coords.latitude;
+          var lng2 = position.coords.longitude;
+          var lat1 = <?php echo $req['latitude'];?>;
+          var lng1 = <?php echo $req['longitude'];?>;
+        var distance = Math.round(haversine_distance(lat1,lat2,lng1,lng2));
+        //alert(distance);
+        $('#id<?php echo $req['id'];?>').html(distance);
+
+      },
+
+      () => {
+        handleLocationError(true, infoWindow, map.getCenter());
+      }
+    );
+
+  } else {
+    // Browser doesn't support Geolocation
+    handleLocationError(false, infoWindow, map.getCenter());
+  }
+
+});
+</script>
 <?php endforeach;?>
 </div>
 
@@ -146,9 +177,6 @@
 
 </div>
 </div>
-<script async
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAj5lKUoRNwRa0maEalb4F-ATTiNzSwK1g&libraries=places&callback=initMap">
-</script>
 
 <script>
 $(document).ready(function() {
