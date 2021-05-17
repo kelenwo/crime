@@ -19,19 +19,21 @@
     <script src="<?php echo base_url();?>template/assets/js/dist.js"></script>
  <script src="<?php echo base_url();?>template/assets/js/bootstrap.bundle.min.js"></script>
 
-  <div id="head">
-    <div class="col-lg-12 col-md-12 row">
-      <div class="col-lg-8 col-md-8">
-  <b>CRIME MAPPING SYSTEM</b>
-  </div> <div class="col-lg-4 col-md-4">
-  <?php if(isset($name)): ?>
-  <b style="float: right;">{name} - <a href="<?php echo base_url();?>logout" style="color:#fcc;">Logout </a></b>
-  <?php else: ?>
-    <b style="float:right;"><a href="<?php echo base_url();?>login" style="color:#fff;"> </a></b>
-  <?php endif;?>
-  </div>
-  </div>
-  </div>
+ <div id="head">
+   <div class="col-lg-12 col-md-12 row">
+     <div class="col-lg-8 col-md-8">
+       <a class="" href="<?php echo base_url();?>">
+         <img class="logo mr-2" src="<?php echo base_url();?>template/assets/uniuyo.png"></img>
+ <b class="mt-1">CRIME MAPPING SYSTEM</b></a>
+ </div> <div class="col-lg-4 col-md-4">
+ <?php if(isset($name)): ?>
+ <b style="float: right;">{name} - <a href="<?php echo base_url();?>ucp/login/logout" style="color:#fcc;">Logout </a></b>
+ <?php else: ?>
+   <b style="float:right;"><a href="<?php echo base_url();?>login" style="color:#fff;">Login </a></b>
+ <?php endif;?>
+ </div>
+ </div>
+ </div>
 
   <div id="menu-user">
     <div class="mobile_nav">
@@ -59,6 +61,13 @@
       <li class="nav-item">
         <a class="nav-link" href="#"><i class="fas fa-user"></i> &nbsp; Profile</a>
       </li>
+      <?php if(isset($name)):?>
+    <?php if($rights=='administrator'):?>
+      <li class="nav-item">
+        <a class="nav-link" href="<?php echo base_url();?>home/index"><i class="fas fa-user"></i> &nbsp; Admin Panel</a>
+      </li>
+    <?php endif;?>
+    <?php  endif;?>
     </ul>
   </div>
 </nav>
@@ -70,10 +79,6 @@
   <div class="container-fluid text-center">
   <div id="side">
   <ul class="nav flex-column nav-custom">
-    <li class="nav-item">
-      <a class="nav-link active" href="<?php echo base_url();?>dashboard/index">
-        <img class="logo" src="<?php echo base_url();?>template/assets/uniuyo.png"></img></a>
-    </li>
     <li class="nav-item">
       <a class="nav-link active" href="<?php echo base_url();?>dashboard/index">
         <i class="fas fa-home"></i><br>
@@ -95,9 +100,9 @@
           Profile</a>
     </li>
       <?php if(isset($name)):?>
-    <?php if($rights=='admin'):?>
+    <?php if($rights=='administrator'):?>
     <li class="nav-item">
-      <a class="nav-link" href="#">
+      <a class="nav-link" href="<?php echo base_url();?>home/index">
           <i class="fas fa-user-shield"></i><br>
           Administrator</a>
     </li>
@@ -126,9 +131,9 @@
 <div class="card mt-2">
   <div class="card-body">
     <span class="mb-1"><strong><?php echo $req['type'];?></strong></span>
-    <span class="f-right mb-1"><span id="id<?php echo $req['id'];?>"></span> metres away</span>
+    <span class="f-right"><span id="id<?php echo $req['id'];?>"></span> metres away</span><br>
       <span style="color:green; font-weight:bold;" class="mb-1"><i class="fas fa-map-marker-alt text-danger"></i> <?php echo $req['location'];?></span>
-      <span class="f-right mb-1"><?php echo $req['date'];?> @ <?php echo $req['time'];?></span>
+      <span class="f-right"><?php echo $req['date'];?> @ <?php echo $req['time'];?></span>
 
       <hr>
     <div class="text-center"><p class="card-text">Did you witness this? kindly, Post a review.

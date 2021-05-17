@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: May 14, 2021 at 02:21 PM
+-- Generation Time: May 17, 2021 at 02:05 PM
 -- Server version: 5.7.31
 -- PHP Version: 7.3.21
 
@@ -142,15 +142,17 @@ CREATE TABLE IF NOT EXISTS `users` (
   `account_status` varchar(20) COLLATE utf8_bin NOT NULL,
   `date` varchar(70) COLLATE utf8_bin NOT NULL,
   `last_login` varchar(70) COLLATE utf8_bin NOT NULL,
+  `auth` varchar(256) COLLATE utf8_bin NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=MyISAM AUTO_INCREMENT=12 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 --
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `name`, `email`, `phone`, `password`, `rights`, `account_status`, `date`, `last_login`) VALUES
-(5, 'Kelvin Elenwo', 'kelenwo68@gmail.com', '08132336635', '$2y$10$ijBQgDOzE3CjBqlpTMnBaeLdmTv5DS2RRTGOQMS3UHEE/3TidSt96', 'administrator', 'active', '24/04/2021', '');
+INSERT INTO `users` (`id`, `name`, `email`, `phone`, `password`, `rights`, `account_status`, `date`, `last_login`, `auth`) VALUES
+(5, 'Kelvin Elenwo', 'kelenwo6@gmail.com', '08132336635', '$2y$10$ijBQgDOzE3CjBqlpTMnBaeLdmTv5DS2RRTGOQMS3UHEE/3TidSt96', 'administrator', 'active', '24/04/2021', '', '0'),
+(11, 'kalu miracle', 'kelenwo68@gmail.com', '08132336635', '$2y$10$qC1KNL//0suPuNBIiBP2.enaLe3kpyFr2Sq3/Kr8.1nK29NvuoLJW', 'user', 'pending', '16/05/2021', '', 'a31981ccfb4c4e9653c55fa787dfaace');
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

@@ -36,13 +36,7 @@ class Home extends CI_Controller {
                 // $this->load->view('head', $data);
                 $this->parser->parse('login', $data);
         }
-        public function ucp($register)
-        {
-             $data['title'] = "LOGIN - CRIME MAPPING SYSTEM";
-                // $this->load->view('head', $data);
-                $this->parser->parse('register', $data);
-        }
-
+        
         public function report_crime()
         {
           if(empty($this->session->name)) {
@@ -66,7 +60,7 @@ class Home extends CI_Controller {
         public function ongoing_crimes()
         {
           $data = $this->session->userdata();
-          $data['reports'] = $this->crime_model->get_crime_reports_all();
+          $data['reports'] = $this->crime_model->get_crime_reports_ongoing();
           $data['title'] = "ONGOING CRIME- CRIME MAPPING SYSTEM";
                 // $this->load->view('head', $data);
           $this->parser->parse('ongoing_crime', $data);

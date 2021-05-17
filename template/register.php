@@ -31,7 +31,7 @@
     </div>
 <div class="col-lg-12 col-md-12">
   <div class="custom-login-body" style="margin-top: 0 !important;">
-    <form id="register">
+    <form class="user" id="register">
   <input type="text" name="name" class="form-control form-noborder" placeholder="Full name">
   <input type="email" name="email" class="form-control form-noborder" placeholder="Email">
     <input type="text" name="phone" class="form-control form-noborder" placeholder="Phone Number">
@@ -40,10 +40,31 @@
   <button type="button" id="submit" class="btn btn-primary btn-block login-btn" disabled>Create Account <i id="loading" class="fas fa-cog fa-spin"></i></button>
 </form>
 </div>
+<p class="mt-3"> Have an Account? <a href="<?php echo base_url('ucp/login');?>">LOGIN HERE</a></p>
 </div>
 </div>
 </div>
 </div>
+
+<!-- Edituser modal -->
+<div class="modal fade" id="auth" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+
+    <div class="modal-content">
+
+      <div class="modal-body">
+<!-- General Information start-->
+<div class="col-md-12 mb-3">
+<h3 class="d-inline">Your account has been created, Please check your email to verify your account</h3>
+</div>
+
+    </div>
+    </div>
+  </div>
+</div>
+<button style="display:none" id="authent" type="button" data-toggle="modal" data-target="#auth">
+</button>
+ <!-- Edituser modal end -->
 
 <div id="main-login">
 <div id="map"></div>
@@ -69,17 +90,16 @@ $('#submit').attr('disabled','disabled');
 $('#submit').click(function() {
 $('#loading').show();
 $.ajax({
-url: '<?php echo base_url('save_user_data');?>',
+url: '<?php echo base_url('ucp/login/save_user');?>',
 data: $('#register').serialize(),
 type: 'POST',
 success:function(data) {
 $('#loading').hide();
-if(data !=='true') {
+if(data==false) {
   alert(data);
 }
-else if(data=='true') {
-  alert('Your account has been created successfully, Proceed to login');
-  window.location.href = '<?php echo base_url('login');?>';
+else {
+  $('#authent').trigger('click');
 }
 }
 });

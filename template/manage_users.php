@@ -28,7 +28,7 @@
    <b class="mt-1">CRIME MAPPING SYSTEM</b></a>
    </div> <div class="col-lg-4 col-md-4">
    <?php if(isset($name)): ?>
-   <b style="float: right;">{name} - <a href="<?php echo base_url();?>logout" style="color:#fcc;">Logout </a></b>
+   <b style="float: right;">{name} - <a href="<?php echo base_url();?>ucp/login/logout" style="color:#fcc;">Logout </a></b>
    <?php else: ?>
      <b style="float:right;"><a href="<?php echo base_url();?>login" style="color:#fff;">Login </a></b>
    <?php endif;?>
@@ -99,7 +99,7 @@
 <div class="panel">
   <div class="panel-heading">
     <h4 style="display:inline-block;">Manage Users &nbsp;
-      |&nbsp;&nbsp;</h4><h4 style="display:inline-block;"><a href="<?php echo base_url();?>report_crime">Report Crime</a></h4>
+      </h4>
   </div>
   <div class="panel-body">
     <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">

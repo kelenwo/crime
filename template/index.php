@@ -30,7 +30,7 @@
   <b class="mt-1">CRIME MAPPING SYSTEM</b></a>
   </div> <div class="col-lg-4 col-md-4">
   <?php if(isset($name)): ?>
-  <b style="float: right;">{name} - <a href="<?php echo base_url();?>logout" style="color:#fcc;">Logout </a></b>
+  <b style="float: right;">{name} - <a href="<?php echo base_url();?>ucp/login/logout" style="color:#fcc;">Logout </a></b>
   <?php else: ?>
     <b style="float:right;"><a href="<?php echo base_url();?>login" style="color:#fff;">Login </a></b>
   <?php endif;?>

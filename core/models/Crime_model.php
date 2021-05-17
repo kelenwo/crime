@@ -15,6 +15,17 @@ Class Crime_model Extends CI_model {
         }
     }
 
+    public function get_auth($auth) {
+        $this->db->select('auth');
+        $this->db->where('auth',$auth);
+        $query = $this->db->get('users');
+        if($query->num_rows() > 0 ) {
+            return TRUE;
+        } else {
+            return FALSE;
+        }
+    }
+
     public function get_users() {
       $query = $this->db->get('users');
       return $query->result_array();
@@ -22,11 +33,20 @@ Class Crime_model Extends CI_model {
 
     public function get_crime_reports() {
       $this->db->where('report_by',$this->session->name);
+      $this->db->where('verify !=', 'blacklist');
       $query = $this->db->get('crime_report');
       return $query->result_array();
     }
 
     public function get_crime_reports_all() {
+      $this->db->where('verify !=', 'blacklist');
+      $query = $this->db->get('crime_report');
+      return $query->result_array();
+    }
+
+    public function get_crime_reports_ongoing() {
+      $this->db->where('status','active');
+      $this->db->where('verify !=', 'blacklist');
       $query = $this->db->get('crime_report');
       return $query->result_array();
     }
@@ -34,6 +54,7 @@ Class Crime_model Extends CI_model {
     public function get_crime_reports_for_review($id) {
       $this->db->select('*');
       $this->db->where('report_id',$id);
+      $this->db->where('verify !=', 'blacklist');
       $query = $this->db->get('crime_report');
       return $query->row();
     }
@@ -98,13 +119,15 @@ Class Crime_model Extends CI_model {
         return $query->row();
     }
 
-    public function save_user_data() {
+    public function save_user_data($code) {
 		$data = array(
 			'name' =>  $this->input->post('name'),
 			'email' =>  $this->input->post('email'),
 			'phone' =>  $this->input->post('phone'),
-      'rights' => 'admin',
+      'rights' => 'user',
+      'account_status' => 'pending',
 			'password' =>  password_hash($this->input->post('password'), PASSWORD_DEFAULT),
+      'auth' => $code,
 			'date' =>  date("d/m/Y"),
 			);
 		$query = $this->db->insert('users', $data);
@@ -191,30 +214,54 @@ Class Crime_model Extends CI_model {
   return $this->db->count_all_results();
   }
 
-  public function update_user_auth() {
-    $data = array(
-      'rights' => 1,
-      'account_state' => 'subscriber',
-    );
-  $this->db->where('email',$this->input->post('email'));
-  $query = $this->db->update('users', $data);
+
+  public function update_user() {
+  $this->db->where('id',$this->input->post('id'));
+  $query = $this->db->update('users', $this->input->post());
   if($query) {
-    return true;
+  return true;
   } else {
-    return mysqli_error();
+  return false;
+  }
+  }
+
+  public function update_user_auth($auth) {
+  $this->db->where('auth',$auth);
+  $this->db->set('account_status','active');
+  $query = $this->db->update('users');
+  if($query) {
+    $this->db->where('auth',$auth);
+    $this->db->set('auth','');
+    $quer = $this->db->update('users');
+    if($quer) {
+    return true;
+    } else {
+     return mysqli_error();
+    }
+
+  } else {
+   return mysqli_error();
   }
 }
 
-public function update_user() {
-$this->db->where('id',$this->input->post('id'));
-$query = $this->db->update('users', $this->input->post());
+public function update_user_password() {
+$this->db->where('auth',$this->input->post('auth'));
+$this->db->set('password',$this->input->post('password'));
+$query = $this->db->update('users');
 if($query) {
-return true;
+  $this->db->where('auth',$this->input->post('auth'));
+  $this->db->set('auth','');
+  $quer = $this->db->update('users');
+  if($quer) {
+  return true;
+  } else {
+   return mysqli_error();
+  }
 } else {
-return false;
+ return mysqli_error();
+}
 }
 
-}
 
 public function update_crime_report() {
 $this->db->where('report_id',$this->input->post('report_id'));

@@ -18,6 +18,7 @@
  <script src="<?php echo base_url();?>template/assets/js/jquery.min.js"></script>
   <script src="<?php echo base_url();?>template/assets/js/autocomplete.js"></script>
   <script src="<?php echo base_url();?>template/assets/js/fa.js"></script>
+    <script src="<?php echo base_url();?>template/assets/js/dist.js"></script>
  <script src="<?php echo base_url();?>template/assets/js/bootstrap.bundle.min.js"></script>
 
  <div id="head">
@@ -28,7 +29,7 @@
  <b class="mt-1">CRIME MAPPING SYSTEM</b></a>
  </div> <div class="col-lg-4 col-md-4">
  <?php if(isset($name)): ?>
- <b style="float: right;">{name} - <a href="<?php echo base_url();?>logout" style="color:#fcc;">Logout </a></b>
+ <b style="float: right;">{name} - <a href="<?php echo base_url();?>ucp/login/logout" style="color:#fcc;">Logout </a></b>
  <?php else: ?>
    <b style="float:right;"><a href="<?php echo base_url();?>login" style="color:#fff;">Login </a></b>
  <?php endif;?>
@@ -110,16 +111,11 @@
 <div id="main-body">
 <div class="panel">
   <div class="panel-heading">
-    <h4>Dashboard</h4>
+    <h4>Ongoing Crimes</h4>
   </div>
   <div class="panel-body row">
     <div class="col-md-12">
-      <div class="alert alert-warning alert-dismissible fade show" role="alert">
-        <strong>Warning!</strong> Notice of ongoing crime(s). Post review to help us and make sure to stay away from the scene(s)
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
+
       <?php foreach($reports as $req): ?>
 <div class="card mt-2">
   <div class="card-body">
@@ -129,7 +125,7 @@
       <span class="f-right"><?php echo $req['date'];?> @ <?php echo $req['time'];?></span>
 
       <hr>
-    <div class="text-center"><p class="card-text">Did you witness this? kindly, Post a review.
+    <div class="text-center"><p class="card-text"><?php echo $req['description'];?>
       </p>
 <a class="btn btn-primary btn-block" href="<?php echo base_url();?>home/view_crime/review/<?php echo $req['report_id'];?>"> See Details</a>
   </div>

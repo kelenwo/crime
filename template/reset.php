@@ -27,19 +27,18 @@
 <div class="container-fluid text-center">
 <div id="side-login">
   <div class="row">
-
 <div class="col-lg-12 col-md-12">
   <div class="custom-login-body">
-    <div class="panel-heading mb-4 text-left">
-      <h4>Account Login</h4>
+    <div class="panel-heading mb-5 text-left">
+      <h4>Reset Password</h4>
     </div>
     <form id="login">
-  <input type="email" name="email" class="form-control form-noborder" placeholder="Email">
-  <input type="password" name="password" class="form-control form-noborder" placeholder="Password">
-  <button type="button"id="submit" class="btn btn-primary btn-block login-btn">Login <i id="loading" class="fas fa-cog fa-spin"></i></button>
+  <input type="password" name="password" class="form-control form-noborder" placeholder="Enter New Password">
+  <input type="password" name="password2" class="form-control form-noborder" placeholder="Retype Password">
+  <input type="hidden" name="auth" value="{auth}">
+  <button type="button"id="submit" class="btn btn-primary btn-block login-btn">Change Password <i id="loading" class="fas fa-cog fa-spin"></i></button>
 </form>
 </div>
-<p class="mt-3"> Forgotten Password? <a href="<?php echo base_url('ucp/login/password_reset');?>">Password Reset</a></p>
 <p class="mt-3"> Dont have an Account? <a href="<?php echo base_url('ucp/login/signup');?>">REGISTER HERE</a></p>
 </div>
 </div>
@@ -58,13 +57,14 @@ $(document).ready(function () {
   $('#submit').click(function() {
   $('#loading').show();
   $.ajax({
-  url: '<?php echo base_url('ucp/login/login_user');?>',
+  url: '<?php echo base_url('ucp/login/update_user_password');?>',
   data: $('#login').serialize(),
   type: 'POST',
   success:function(data) {
   $('#loading').hide();
   if(data=='true') {
-      window.location.href = '<?php echo base_url('dashboard/index');?>';
+    alert('Your Password has been changed successfully, Proceed to login!!');
+      window.location.href = '<?php echo base_url('ucp/login');?>';
   }
   else {
     alert(data);

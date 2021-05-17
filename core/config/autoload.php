@@ -57,7 +57,7 @@ $autoload['packages'] = array();
 |
 |	$autoload['libraries'] = array('user_agent' => 'ua');
 */
-$autoload['libraries'] = array('database','parser','upload','form_validation','session');
+$autoload['libraries'] = array('database','parser','upload','form_validation','session','email');
 
 /*
 | -------------------------------------------------------------------
@@ -102,7 +102,7 @@ $autoload['helper'] = array('url','date','file','form',);
 | config files.  Otherwise, leave it blank.
 |
 */
-$autoload['config'] = array('remita');
+$autoload['config'] = array('email');
 
 /*
 | -------------------------------------------------------------------

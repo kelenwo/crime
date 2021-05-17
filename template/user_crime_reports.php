@@ -24,12 +24,14 @@
  <div id="head">
    <div class="col-lg-12 col-md-12 row">
      <div class="col-lg-8 col-md-8">
- <b>CRIME MAPPING SYSTEM</b>
+       <a class="" href="<?php echo base_url();?>">
+         <img class="logo mr-2" src="<?php echo base_url();?>template/assets/uniuyo.png"></img>
+ <b class="mt-1">CRIME MAPPING SYSTEM</b></a>
  </div> <div class="col-lg-4 col-md-4">
  <?php if(isset($name)): ?>
- <b style="float: right;">{name} - <a href="<?php echo base_url();?>logout" style="color:#fcc;">Logout </a></b>
+ <b style="float: right;">{name} - <a href="<?php echo base_url();?>ucp/login/logout" style="color:#fcc;">Logout </a></b>
  <?php else: ?>
-   <b style="float:right;"><a href="<?php echo base_url();?>login" style="color:#fff;"> </a></b>
+   <b style="float:right;"><a href="<?php echo base_url();?>login" style="color:#fff;">Login </a></b>
  <?php endif;?>
  </div>
  </div>
@@ -61,6 +63,13 @@
      <li class="nav-item">
        <a class="nav-link" href="#"><i class="fas fa-user"></i> &nbsp; Profile</a>
      </li>
+     <?php if(isset($name)):?>
+   <?php if($rights=='administrator'):?>
+     <li class="nav-item">
+       <a class="nav-link" href="<?php echo base_url();?>home/index"><i class="fas fa-user"></i> &nbsp; Admin Panel</a>
+     </li>
+   <?php endif;?>
+   <?php  endif;?>
    </ul>
  </div>
 </nav>
@@ -72,10 +81,6 @@
  <div class="container-fluid text-center">
  <div id="side">
  <ul class="nav flex-column nav-custom">
-   <li class="nav-item">
-     <a class="nav-link active" href="<?php echo base_url();?>dashboard/index">
-       <img class="logo" src="<?php echo base_url();?>template/assets/uniuyo.png"></img></a>
-   </li>
    <li class="nav-item">
      <a class="nav-link active" href="<?php echo base_url();?>dashboard/index">
        <i class="fas fa-home"></i><br>
@@ -97,12 +102,12 @@
          Profile</a>
    </li>
      <?php if(isset($name)):?>
-   <?php if($rights=='admin'):?>
-   <li class="nav-item">
-     <a class="nav-link" href="#">
-         <i class="fas fa-user-shield"></i><br>
-         Administrator</a>
-   </li>
+   <?php if($rights=='administrator'):?>
+     <li class="nav-item">
+       <a class="nav-link" href="<?php echo base_url();?>home/index">
+           <i class="fas fa-user-shield"></i><br>
+           Administrator</a>
+     </li>
  <?php endif;?>
  <?php endif;?>
 
