@@ -176,7 +176,7 @@ var color = '#111';
    const myLatLng = { lat: lat, lng: lng };
 
    const infowindow = new google.maps.InfoWindow({
-   content: block,
+   content: crimes[i].type,
    });
    const marker = new google.maps.Marker({
    position: myLatLng,

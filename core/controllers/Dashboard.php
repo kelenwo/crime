@@ -13,7 +13,7 @@ if(empty($this->session->email)) {
         public function index()
         {
              $data = $this->session->userdata();
-             $data['reports'] = $this->crime_model->get_crime_reports_all();
+             $data['reports'] = $this->crime_model->get_crime_reports_ongoing();
               //$data['review'] = $this->crime_model->get_crime_reports_all();
              $data['title'] = "CRIME MAPPING SYSTEM";
                 // $this->load->view('head', $data);

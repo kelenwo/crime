@@ -17,6 +17,7 @@
  <script src="<?php echo base_url();?>template/assets/js/jquery.min.js"></script>
   <script src="<?php echo base_url();?>template/assets/js/custom_map.js"></script>
     <script src="<?php echo base_url();?>template/assets/js/dist.js"></script>
+       <script src="<?php echo base_url();?>template/assets/js/fa.js"></script>
  <script src="<?php echo base_url();?>template/assets/js/bootstrap.bundle.min.js"></script>
 
  <div id="head">

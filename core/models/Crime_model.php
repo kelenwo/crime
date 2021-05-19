@@ -31,9 +31,21 @@ Class Crime_model Extends CI_model {
       return $query->result_array();
     }
 
+    public function get_users_admin() {
+      $this->db->where('rights','administrator');
+      $query = $this->db->get('users');
+      return $query->result_array();
+    }
+
+    public function get_users_blocked() {
+      $query = $this->db->get('users');
+      return $query->result_array();
+    }
+
     public function get_crime_reports() {
       $this->db->where('report_by',$this->session->name);
       $this->db->where('verify !=', 'blacklist');
+      $this->db->order_by('date','DESC');
       $query = $this->db->get('crime_report');
       return $query->result_array();
     }
@@ -47,6 +59,7 @@ Class Crime_model Extends CI_model {
     public function get_crime_reports_ongoing() {
       $this->db->where('status','active');
       $this->db->where('verify !=', 'blacklist');
+      $this->db->order_by('date','DESC');
       $query = $this->db->get('crime_report');
       return $query->result_array();
     }

@@ -125,7 +125,7 @@ else: ?>
     <div >
       <?php if($res['status']=='genuine'): ?>
       <span style="color:green; font-weight:bold; text-transform: capitalize;"><?php echo $res['status'];?> Report</span>
-    <?php elseif($res['status']=='genuine'): ?>
+    <?php elseif($res['status']=='false'): ?>
       <span style="color:red; font-weight:bold; text-transform: capitalize;"><?php echo $res['status'];?> Report</span>
     <?php endif;?>
       <span style="float: right; font-weight:bold;"><?php echo $res['review_by'];?></span>

@@ -13,13 +13,14 @@
   <link href="<?php echo base_url();?>template/assets/css/main.css" rel="stylesheet">
   <link href="<?php echo base_url();?>template/assets/css/bootstrap.css" rel="stylesheet">
 <link href="<?php echo base_url();?>template/assets/fontawesome/css/all.css" rel="stylesheet">
+<link href="<?php echo base_url();?>template/assets/css/all.css" rel="stylesheet">
   </head>
- <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
  <script src="<?php echo base_url();?>template/assets/js/jquery.min.js"></script>
   <script src="<?php echo base_url();?>template/assets/js/custom_map.js"></script>
   <script src="<?php echo base_url();?>template/assets/js/mobile.js"></script>
   <script src="<?php echo base_url();?>template/assets/js/autocomplete.js"></script>
  <script src="<?php echo base_url();?>template/assets/js/bootstrap.bundle.min.js"></script>
+    <script src="<?php echo base_url();?>template/assets/js/fa.js"></script>
 
  <div id="head">
    <div class="col-lg-12 col-md-12 row">
@@ -41,7 +42,7 @@
    <div class="mobile_nav">
      <span class="bars" data-trigger="navbar_main" id="show"><i class="fas fa-bars"></i></span>
      <span class="bars btn-close" id="hide" style="display:none"><i class="fas fa-bars"></i></span>
-     <span class="round bg-danger" style="float:right"><i class="fas fa-bell"></i></span>
+     <span class="round bg-danger" style="float:right"><i class="fas fa-bell-on"></i></span>
 
    <nav id="navbar_main" class="mobile-offcanvas navbar navbar-expand-lg  bg-light">
  <div class="navbar-collapse" id="navbarSupportedContent">
@@ -118,7 +119,7 @@
 <div id="main-body">
 <div class="panel">
   <div class="panel-heading">
-    <h4>Post Review</h4>
+    <h4>Your Reports</h4>
   </div>
   <div class="panel-body row">
     <div class="col-md-12 col-12">

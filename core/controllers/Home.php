@@ -36,7 +36,7 @@ class Home extends CI_Controller {
                 // $this->load->view('head', $data);
                 $this->parser->parse('login', $data);
         }
-        
+
         public function report_crime()
         {
           if(empty($this->session->name)) {
@@ -70,6 +70,7 @@ class Home extends CI_Controller {
         {
           $data = $this->session->userdata();
           $get = $this->crime_model->get_users();
+          $getAdmin = $this->crime_model->get_users_admin();
           $arr = array();
           foreach($get as $res) {
             $rep = $this->crime_model->count_reports_user($res['name']);
@@ -91,8 +92,30 @@ class Home extends CI_Controller {
             array_push($arr,$new);
           }
 
+          $arrn = array();
+          foreach($getAdmin as $res) {
+            $rep = $this->crime_model->count_reports_user($res['name']);
+            $frep = $this->crime_model->count_false_reports_user($res['name']);
+            $rev = $this->crime_model->count_reviews_user($res['name']);
+            $new = array(
+                  'id' => $res['id'],
+                  'name' => $res['name'],
+                  'email' => $res['email'],
+                  'phone' => $res['phone'],
+                  'rights' => $res['rights'],
+                  'account_status' => $res['account_status'],
+                  'date' => $res['date'],
+                  'last_login' => $res['last_login'],
+                  'reports' => $rep,
+                  'false_reports' => $frep,
+                  'reviews' => $rev
+                   );
+            array_push($arrn,$new);
+          }
+
           //var_dump($arr);
           $data['users'] = $arr;
+          $data['admin'] = $arrn;
           $data['title'] = "Manage Users- CRIME MAPPING SYSTEM";
                 // $this->load->view('head', $data);
           $this->parser->parse('manage_users', $data);

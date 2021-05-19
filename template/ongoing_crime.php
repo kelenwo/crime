@@ -127,7 +127,7 @@
       <hr>
     <div class="text-center"><p class="card-text"><?php echo $req['description'];?>
       </p>
-<a class="btn btn-primary btn-block" href="<?php echo base_url();?>home/view_crime/review/<?php echo $req['report_id'];?>"> See Details</a>
+<a class="btn btn-primary btn-block" href="<?php echo base_url();?>home/view_crime/review/<?php echo $req['report_id'];?>"> View Details</a>
   </div>
 
 </div>
