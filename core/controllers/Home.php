@@ -12,7 +12,13 @@ class Home extends CI_Controller {
 }
         public function index()
         {
-             $data = $this->session->userdata();
+          $data = $this->session->userdata();
+          if(empty($this->input->post('location'))) {
+            $data['location'] = $this->input->post('location');
+          } else {
+            $data['location'] = '';
+          }
+
              $data['title'] = "CRIME MAPPING SYSTEM";
                 // $this->load->view('head', $data);
                 $this->parser->parse('index', $data);
@@ -48,6 +54,15 @@ class Home extends CI_Controller {
                 $this->parser->parse('report_crime', $data);
 
         }
+        public function generate_report()
+        {
+          $data = $this->session->userdata();
+          $data['reports'] = $this->crime_model->get_crime_reports();
+          $data['title'] = "GENERATE REPORT- CRIME MAPPING SYSTEM";
+                // $this->load->view('head', $data);
+                $this->parser->parse('generate_report', $data);
+        }
+
         public function crime_reports()
         {
           $data = $this->session->userdata();
@@ -193,6 +208,51 @@ class Home extends CI_Controller {
                 $data);
               }
 
+              public function filter_date() {
+                $start_date = date('Y-m-d', strtotime($this->input->post('start-date')));
+                $end_date = date('Y-m-d', strtotime($this->input->post('end-date')));
+                  $data = $this->crime_model->filter_date($start_date,$end_date);
+                echo json_encode(
+                  $data);
+                }
+
+                public function filter_crime() {
+                    $req = $this->input->post('type');
+                    $start_date = date('Y-m-d', strtotime($this->input->post('start-date')));
+                    $end_date = date('Y-m-d', strtotime($this->input->post('end-date')));
+
+                    $count = count($req);
+                    $arr = array();
+                    $i=0;
+                      foreach($req as$reqs) {
+
+                        $ress = $this->crime_model->filter_crime($reqs,$start_date,$end_date);
+                        if($ress!==false) {
+                          foreach($ress as $res) {
+                      $new = array(
+                            'id' => $res['id'],
+                            'type' => $res['type'],
+                            'description' => $res['description'],
+                            'location' => $res['location'],
+                            'report_by' => $res['report_by'],
+                            'status' => $res['status'],
+                            'report_id' => $res['report_id'],
+                            'date' => $res['date'],
+                            'time' => $res['time'],
+                            'latitude' => $res['latitude'],
+                            'longitude' => $res['longitude']
+                             );
+
+                      array_push($arr,$new);
+
+                        }
+                      }
+
+                      }
+                      //  var_dump($arr);
+                  echo json_encode($arr);
+                  }
+
               public function get_map_data_block() {
                   $data = $this->crime_model->get_map_data_block($this->input->post('latitude'));
                 echo json_encode($data);
@@ -262,5 +322,54 @@ class Home extends CI_Controller {
             $update = $this->crime_model->update_crime_report();
             echo $update;
             }
+
+            public function generate_record() {
+                $req = $this->input->post('type');
+                $start_date = date('Y-m-d', strtotime($this->input->post('start-date')));
+                $end_date = date('Y-m-d', strtotime($this->input->post('end-date')));
+
+                $count = count($req);
+                $arr = array();
+                $i=0;
+                  foreach($req as$reqs) {
+
+                    $ress = $this->crime_model->filter_crime($reqs,$start_date,$end_date);
+                    if($ress!==false) {
+                      foreach($ress as $res) {
+                  $new = array(
+                        'id' => $res['id'],
+                        'type' => $res['type'],
+                        'description' => $res['description'],
+                        'location' => $res['location'],
+                        'report_by' => $res['report_by'],
+                        'status' => $res['status'],
+                        'report_id' => $res['report_id'],
+                        'date' => $res['date'],
+                        'time' => $res['time'],
+                        'latitude' => $res['latitude'],
+                        'longitude' => $res['longitude']
+                         );
+
+                  array_push($arr,$new);
+
+                    }
+                  }
+
+                  }
+                  require "vendor/autoload.php";
+                          $data['title'] = "Crime Reports";
+                          $data['reports'] = $arr;
+                  $mpdf = new \Mpdf\Mpdf();
+                  //$mpdf->SetDefaultFont('montserrat');
+                        $html = $this->parser->parse('gen_reports',$data,true);
+                          $mpdf->shrink_tables_to_fit = 0;
+                          $mpdf->SetWatermarkText(mb_strtoupper('CRIME REPORTS'));
+                          $mpdf->showWatermarkText = true;
+                          $mpdf->watermarkTextAlpha = 0.1;
+                            //$this->load->library('m_pdf');
+                            $mpdf->WriteHTML($html);
+                            $mpdf->Output(mb_strtoupper('Crime_report.pdf','D'));
+                               //unlink($params['savename']);
+              }
 
       }

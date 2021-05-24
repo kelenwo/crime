@@ -42,7 +42,7 @@
    <div class="row">
      <div class="col-lg-5 col-md-5">
        <div class="col-auto" style="margin-left:0;">
-         <form id="search" method="post" action="<?php echo base_url('home/crime_search/location');?>" autocomplete="off">
+         <form id="search" autocomplete="off">
          <label class="sr-only" for="inlineFormInputGroup">Search Crime, Location</label>
          <div class="input-group mb-3 autocomplete">
            <div class="input-group-prepend">
@@ -50,9 +50,10 @@
                <i class="fas fa-search"></i>
              </span>
            </div>
-           <input type="text" name="location" class="form-control input-group-custom" id="location" placeholder="Search Crime, Location">
+           <input type="text" name="location" class="form-control input-group-custom" id="location" placeholder="Search Crime, Location"
+           <?php if($location):?> value="{location}"<?php endif;?>>
            <span class="input-group-text input-group-custom" style="margin-left:-8px;">
-             <button type="submit" id="go" class="btn btn-primary">GO  <i id="loading" class="fas fa-spinner fa-spin"></i></button>
+             <button type="button" id="go" class="btn btn-primary">GO  <i id="loading" class="fas fa-spinner fa-spin"></i></button>
            </span>
          </div>
        </div>
@@ -60,18 +61,24 @@
 
      </div>
      <div class="col-lg-7 col-md-7">
-       <div class="omenu ml-15">
+       <div class="omenu mr-5 text-right">
          <span>
-       <button type="button" class="btn btn-primary"><div id="records">0 Records</div> <i id="loading-record" class="fas fa-spinner fa-spin"></i></button></span>
-       <span class="mt-"><small>Date Range:</small>
-            <a class="m" style="color:#383192;" id="sort-by-date" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Yesterday</a>
+           <button type="button" class="btn btn-primary"><div id="records">0 records</div> <i id="loading-record" class="fas fa-spinner fa-spin"></i></button></span>
+                <span class="mt-"><small>Date Range:</small>
+            <a class="m" style="color:#383192;" id="sort-by-date" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><b id="all">All Time</b> <i id="loading-date" class="fas fa-spinner fa-spin"></i></a>
            <div class="dropdown-menu" aria-labelledby="sort-by-date">
-             <a class="dropdown-item" href="#">Action</a>
-             <a class="dropdown-item" href="#">Another action</a>
-             <a class="dropdown-item" href="#">Something else here</a>
+             <div class="dropdown-item cursor-pointer" id="yesterday">Yesterday</div>
+             <div class="dropdown-item cursor-pointer" id="3days-ago">3 Days ago</div>
+             <div class="dropdown-item cursor-pointer" id="last-week">Last Week</div>
+             <div class="dropdown-item cursor-pointer" id="last-month">Last Month</div>
+             <div class="dropdown-item cursor-pointer" id="custom-range">Custom Range</div>
+             <div class="dropdown-item cursor-pointer"  id="custom-range"><input type="date" id="startDate" class="form-control form-control-sm mb-1">
+               <input type="date" id="endDate" class="form-control form-control-sm">
+             <button type="button" id="custom-date" class="mt-1 btn btn-primary btn-sm btn-block">Submit</button></div>
            </div>
          </span>
-       <span class="mt-1"><a id="filter" style="color:#383192;"><i class="fas fa-filter"></i> Filter</a></span>
+       <span class="mt-1"><a id="filter" style="color:#383192;" data-toggle="modal" data-target="#filter-by-crime"><i class="fas fa-filter"></i> Filter</a></span>
+
      </div>
      </div>
    </div>
@@ -91,7 +98,7 @@
           Ongoing Crimes</a>
     </li>
     <li class="nav-item">
-      <a class="nav-link" href="#">
+      <a class="nav-link" href="<?php echo base_url('generate_report');?>">
           <i class="far fa-file-export"></i><br>
           Generate Report</a>
     </li>
@@ -113,18 +120,282 @@
 <div id="map"></div>
 </div>
 
+<!-- Modal -->
+<div class="modal fade" id="filter-by-crime" tabindex="-1" role="dialog" aria-labelledby="filter-crime" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+
+        <h5 class="modal-title" id="filter-crime">Filter by crime</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body ml-2">
+        <form id="filterBy">
+        <div class="form-check mb-1">
+    <input class="form-check-input" name="type[]" type="checkbox" value="Assault" id="defaultCheck1">
+    <label class="form-check-label" for="defaultCheck1">
+      Assault
+    </label>
+  </div>
+  <div class="form-check mb-1">
+  <input class="form-check-input" name="type[]" type="checkbox" value="Consfiscation" id="defaultCheck2">
+  <label class="form-check-label" for="defaultCheck2">
+    Confiscation
+  </label>
+</div>
+  <div class="form-check mb-1">
+  <input class="form-check-input" name="type[]" type="checkbox" value="Drugs/Alcohol Violation" id="defaultCheck3">
+  <label class="form-check-label" for="defaultCheck3">
+    Drugs/Alcohol Violation
+  </label>
+</div>
+<div class="form-check mb-1">
+<input class="form-check-input" name="type[]" type="checkbox" value=" Exam Malpractice" id="defaultCheck4">
+<label class="form-check-label" for="defaultCheck4">
+  Exam Malpractice
+</label>
+</div>
+<div class="form-check mb-1">
+  <input class="form-check-input" name="type[]" type="checkbox" value="Robbery" id="defaultCheck5">
+  <label class="form-check-label" for="defaultCheck5">
+    Robbery
+  </label>
+</div>
+<div class="form-check mb-1">
+  <input class="form-check-input" name="type[]" type="checkbox" value="Murder" id="defaultCheck6">
+  <label class="form-check-label" for="defaultCheck6">
+    Murder
+  </label>
+</div>
+<div class="form-check">
+  <input class="form-check-input" name="type[]" type="checkbox" value="others" id="defaultCheck7">
+  <label class="form-check-label" for="defaultCheck7">
+    Others
+  </label>
+</div>
+  <input type="hidden" name="start-date" id="start-date" value="first day of previous year">
+  <input type="hidden" name="end-date" id="end-date" value="today">
+</form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" id="searchByCrime">Save changes <i id="loading-crime" class="fas fa-spinner fa-spin"></i></button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <input type="hidden" id="lat" >
 <input type="hidden" id="long">
+
 <button id="ref" type="button" style="display:none"></button>
+<button id="searchByDate" type="button" style="display:none"></button>
 <script async
     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAj5lKUoRNwRa0maEalb4F-ATTiNzSwK1g&libraries=places&callback=initMap">
 </script>
 <script>
 $(document).ready(function(){
+
+  //Hide all the loading Icons and only display them when neccessary
   $('#loading-record').hide();
   $('#loading').hide();
+  $('#loading-crime').hide();
+  $('#loading-date').hide();
+  var location = $('#location').val();
 
-  //alert(closest);
+
+if(location!=='') {
+$('#go').trigger('click');
+}
+
+$('#yesterday').on('click', function() {
+  $('#start-date').val('yesterday');
+  $('#end-date').val('today');
+  $('#all').html('Yesterday');
+  $('#searchByDate').trigger('click');
+});
+$('#3days-ago').on('click', function() {
+  $('#start-date').val('-3 days');
+  $('#end-date').val('today');
+  $('#all').html('3 days ago');
+  $('#searchByDate').trigger('click');
+});
+$('#last-week').on('click', function() {
+  $('#start-date').val('last week sunday');
+  $('#end-date').val('next monday');
+  $('#all').html('Last week');
+  $('#searchByDate').trigger('click');
+});
+$('#last-month').on('click', function() {
+  $('#start-date').val('first day of previous month');
+  $('#end-date').val('last day of previous month');
+  $('#all').html('Last Month');
+  $('#searchByDate').trigger('click');
+});
+
+$('#custom-date').on('click', function() {
+  var start =   $('#startDate').val();
+  var end = $('#endDate').val();
+  $('#start-date').val(start);
+  $('#end-date').val(end);
+  $('#searchByDate').trigger('click');
+});
+
+//Search by date
+$('#searchByDate').on('click',function() {
+
+$('#loading-date').show();
+    $.ajax({
+    url: '<?php echo base_url('home/filter_date');?>',
+    data: $('#filterBy').serialize(),
+    type: 'POST',
+    dataType: 'JSON',
+    success:function(crimes) {
+$('#loading-date').hide();
+  $('#records').html(crimes.length +' record');
+      const map = new google.maps.Map(document.getElementById("map"), {
+      zoom: 15,
+      center: new google.maps.LatLng(5.028829, 7.978997),
+      styles: [
+        {
+          "featureType": "all",
+          "elementType": "labels.icon",
+          "stylers": [
+            { "visibility": "off" }
+          ]
+        }
+      ]
+      });
+     for (i = 0; i < crimes.length; i++) {
+       var lat = parseFloat(crimes[i].latitude);
+       var lng = parseFloat(crimes[i].longitude);
+       var block = crimes[i].location;
+       var status = crimes[i].status;
+       var report_id = crimes[i].report_id;
+       var lat2 = 5.041476;
+       var lng2 = 7.975939;
+  //alert(report_id);
+
+  var icon = '<?php echo base_url();?>template/assets/marker-red.png';
+  var color = '#111';
+     const myLatLng = { lat: lat, lng: lng };
+
+     const infowindow = new google.maps.InfoWindow({
+     content: crimes[i].type,
+     });
+     const marker = new google.maps.Marker({
+     position: myLatLng,
+     map,
+     animation: google.maps.Animation.DROP,
+     icon: {
+    labelOrigin: new google.maps.Point(16,64),
+    url: icon
+  },
+  title: report_id,
+    label: {
+      text: block,
+      color: color,
+      fontWeight: "",
+      fontSize: "12px"
+  }
+     });
+     infowindow.open(map, marker);
+    // marker.addListener("click", () => {
+  //     window.location.href = '<?php echo base_url();?>home/view_crime/review/'+report_id;
+  //   });
+  //alert(marker['title']);
+  marker.addListener("click", () => {
+    infowindow.close();
+    window.location.href = '<?php echo base_url();?>home/view_crime/review/'+marker['title'];
+  });
+     google.maps.event.addListener(marker, "click", toggleBounce, () => {
+       infowindow.setContent(place.name || "");
+       infowindow.open(map);
+     });
+
+  }
+  }
+  });
+});
+
+//Filter By crime
+$('#searchByCrime').on('click',function() {
+$('#loading-crime').show();
+    $.ajax({
+    url: '<?php echo base_url('home/filter_crime');?>',
+    data: $('#filterBy').serialize(),
+    type: 'POST',
+    dataType: 'JSON',
+    success:function(crimes) {
+$('#loading-crime').hide();
+  $('#records').html(crimes.length +' record');
+$('.close').trigger('click');
+      const map = new google.maps.Map(document.getElementById("map"), {
+      zoom: 15,
+      center: new google.maps.LatLng(5.028829, 7.978997),
+      styles: [
+        {
+          "featureType": "all",
+          "elementType": "labels.icon",
+          "stylers": [
+            { "visibility": "off" }
+          ]
+        }
+      ]
+      });
+     for (i = 0; i < crimes.length; i++) {
+       var lat = parseFloat(crimes[i].latitude);
+       var lng = parseFloat(crimes[i].longitude);
+       var block = crimes[i].location;
+       var status = crimes[i].status;
+       var report_id = crimes[i].report_id;
+       var lat2 = 5.041476;
+       var lng2 = 7.975939;
+  //alert(report_id);
+
+  var icon = '<?php echo base_url();?>template/assets/marker-red.png';
+  var color = '#111';
+     const myLatLng = { lat: lat, lng: lng };
+
+     const infowindow = new google.maps.InfoWindow({
+     content: crimes[i].type,
+     });
+     const marker = new google.maps.Marker({
+     position: myLatLng,
+     map,
+     animation: google.maps.Animation.DROP,
+     icon: {
+    labelOrigin: new google.maps.Point(16,64),
+    url: icon
+  },
+  title: report_id,
+    label: {
+      text: block,
+      color: color,
+      fontWeight: "",
+      fontSize: "12px"
+  }
+     });
+     infowindow.open(map, marker);
+    // marker.addListener("click", () => {
+  //     window.location.href = '<?php echo base_url();?>home/view_crime/review/'+report_id;
+  //   });
+  //alert(marker['title']);
+  marker.addListener("click", () => {
+    infowindow.close();
+    window.location.href = '<?php echo base_url();?>home/view_crime/review/'+marker['title'];
+  });
+     google.maps.event.addListener(marker, "click", toggleBounce, () => {
+       infowindow.setContent(place.name || "");
+       infowindow.open(map);
+     });
+
+  }
+  }
+  });
+});
 
 $("#location").keyup(function(){
   $.ajax({
@@ -139,6 +410,98 @@ autocomplete(document.getElementById("location"), map_data);
   }
   });
 });
+});
+
+let map;
+let service;
+let infowindow;
+
+//Trigger the search
+$('#go').on('click', function() {
+
+  $('#loading').show();
+  $.ajax({
+  url: '<?php echo base_url('home/get_crimes');?>',
+  type: 'GET',
+  dataType: 'JSON',
+  success:function(crimes) {
+  $('#loading').hide();
+    const map = new google.maps.Map(document.getElementById("map"), {
+    zoom: 15,
+    center: new google.maps.LatLng(5.028829, 7.978997),
+    styles: [
+      {
+        "featureType": "all",
+        "elementType": "labels.icon",
+        "stylers": [
+          { "visibility": "off" }
+        ]
+      }
+    ]
+    });
+   for (i = 0; i < crimes.length; i++) {
+     var lat = parseFloat(crimes[i].latitude);
+     var lng = parseFloat(crimes[i].longitude);
+     var block = crimes[i].location;
+     var status = crimes[i].status;
+     var report_id = crimes[i].report_id;
+     var lat2 = 5.041476;
+     var lng2 = 7.975939;
+     var loc = $('#location').val();
+  //alert(report_id);
+
+  if(loc==block) {
+  var contentType = block;
+  var blockType = '  ';
+  var icon = '<?php echo base_url();?>template/assets/marker-pin.png';
+} else {
+  var contentType = crimes[i].type;
+  var blockType = block;
+  if(status=='saved') {
+  var icon = '<?php echo base_url();?>template/assets/marker-black.png';
+} else {
+  var icon = '<?php echo base_url();?>template/assets/marker-red.png';
+}
+}
+  var color = '#111';
+   const myLatLng = { lat: lat, lng: lng };
+
+   const infowindow = new google.maps.InfoWindow({
+   content: contentType,
+   });
+   const marker = new google.maps.Marker({
+   position: myLatLng,
+   map,
+   animation: google.maps.Animation.DROP,
+   icon: {
+  labelOrigin: new google.maps.Point(16,64),
+  url: icon
+  },
+  title: report_id,
+  label: {
+    text: blockType,
+    color: color,
+    fontWeight: "",
+    fontSize: "12px"
+  }
+   });
+   infowindow.open(map, marker);
+  // marker.addListener("click", () => {
+  //     window.location.href = '<?php echo base_url();?>home/view_crime/review/'+report_id;
+  //   });
+  //alert(marker['title']);
+  marker.addListener("click", () => {
+  infowindow.close();
+  window.location.href = '<?php echo base_url();?>home/view_crime/review/'+marker['title'];
+  });
+   google.maps.event.addListener(marker, "click", toggleBounce, () => {
+     infowindow.setContent(place.name || "");
+     infowindow.open(map);
+   });
+
+  }
+  }
+  });
 });
 
 function get_result() {
@@ -171,7 +534,11 @@ function get_result() {
      var lng2 = 7.975939;
 //alert(report_id);
 
+if(status=='saved') {
+var icon = '<?php echo base_url();?>template/assets/marker-black.png';
+} else {
 var icon = '<?php echo base_url();?>template/assets/marker-red.png';
+}
 var color = '#111';
    const myLatLng = { lat: lat, lng: lng };
 
@@ -213,10 +580,6 @@ marker.addListener("click", () => {
 });
 }
 
-let map;
-let service;
-let infowindow;
-
 function initMap() {
   const home = new google.maps.LatLng(5.028829, 7.978997);
   infowindow = new google.maps.InfoWindow();
@@ -235,7 +598,49 @@ function initMap() {
   });
 
 get_result();
+$('#ref').on('click', function() {
+  var lat = parseFloat(document.getElementById('lat').value);
+  var lng = parseFloat(document.getElementById('long').value);
+  var block = $('#location').val();
+  var icon = '<?php echo base_url();?>template/assets/marker-pin.png';
+  var color = '#111';
+const myLatLng = { lat: lat, lng: lng };
+const map = new google.maps.Map(document.getElementById("map"), {
+zoom: 16,
+center: myLatLng,
+styles: [
+  {
+    "featureType": "all",
+    "elementType": "labels.icon",
+    "stylers": [
+      { "visibility": "off" }
+    ]
+  }
+]
+});
+const infowindow = new google.maps.InfoWindow({
+content: block,
+});
+const marker = new google.maps.Marker({
+position: myLatLng,
+map,
+ animation: google.maps.Animation.DROP,
+icon: {
+  labelOrigin: new google.maps.Point(16,64),
+  url: icon
+},
+title: '',
+  label: {
+    text: block,
+    color: color,
+    fontWeight: "",
+    fontSize: "12px"
+  }
+});
 
+ map.setCenter(marker.getPosition())
+get_result();
+});
 }
 
 

@@ -88,6 +88,12 @@ padding: 0px;
 margin: 5px;
 }
 
+.dropdown-item {
+  border-bottom: 1px #ddd solid !important;
+}
+.dropdown-item:last-child {
+  border-bottom: 0 !important;
+}
 .input-group-custom {
   background-color: white !important;
   border-color: white !important;
@@ -265,7 +271,9 @@ body {
   left: 0;
   right: 0;
 }
-
+.cursor-pointer {
+  cursor: pointer !important;
+}
 .autocomplete-items {
   padding: 10px;
   cursor: pointer;

@@ -128,12 +128,13 @@
         <label>Crime</label>
     <select name="type" class="form-control">
       <option>-Select-</option>
-      <option value="Arson">Assault</option>
+      <option value="Assault">Assault</option>
+      <option value="Confiscation">Confiscation</option>
       <option value="Exam Malpractice">Exam Malpractice</option>
-      <option value="Sex Crime">Sex Crime</option>
       <option value="Drugs/Alcohol Violation">Drugs/Alcohol Violation</option>
       <option value="Robbery">Robbery</option>
       <option value="Murder">Murder</option>
+      <option value="Others">Others</option>
     </select>
       </div>
 
@@ -233,7 +234,7 @@ $(document).ready(function() {
           success:function(block) {
 
             var counts = block.lat,
-              goal = 5.04103800;
+              goal =   $('#latitude').val();
 
             var closest = counts.reduce(function(prev, curr) {
               return (Math.abs(curr - goal) < Math.abs(prev - goal) ? curr : prev);

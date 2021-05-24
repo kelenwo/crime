@@ -118,6 +118,29 @@ Class Crime_model Extends CI_model {
       return $query->row();
     }
 
+    public function filter_date($start,$end) {
+      $this->db->where('date >=', $start);
+      $this->db->where('date <=', $end);
+      $this->db->select('*');
+      $query = $this->db->get('crime_report');
+      return $query->result_array();
+    }
+
+    public function filter_crime($type,$start,$end) {
+      $this->db->where('date >=', $start);
+      $this->db->where('date <=', $end);
+      $this->db->where('type',$type);
+      $this->db->select('*');
+      $query = $this->db->get('crime_report');
+      if($query->num_rows() > 0 ) {
+          return $query->result_array();
+          //returns true if exists
+      } else {
+          return FALSE;
+          //returns false if it doesnt exist
+      }
+    }
+
     public function password_check() {
         //$this->db->select('password');
         $this->db->limit(1);
@@ -190,9 +213,11 @@ Class Crime_model Extends CI_model {
 
   }
   public function search_crime_report() {
+    //  $this->db->like('location',$var);
     $this->db->where('location',$this->input->post('location'));
+    //$this->db->limit(2);
     $query = $this->db->get('crime_report');
-    if($query->num_rows() > 0 ) {
+        if($query->num_rows() > 0 ) {
         return $query->result_array();
         //returns true if exists
     } else {
