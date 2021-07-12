@@ -67,6 +67,7 @@
                 <span class="mt-"><small>Date Range:</small>
             <a class="m" style="color:#383192;" id="sort-by-date" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><b id="all">All Time</b> <i id="loading-date" class="fas fa-spinner fa-spin"></i></a>
            <div class="dropdown-menu" aria-labelledby="sort-by-date">
+             <div class="dropdown-item cursor-pointer" id="all-time">All time</div>
              <div class="dropdown-item cursor-pointer" id="yesterday">Yesterday</div>
              <div class="dropdown-item cursor-pointer" id="3days-ago">3 Days ago</div>
              <div class="dropdown-item cursor-pointer" id="last-week">Last Week</div>
@@ -90,7 +91,7 @@
     <li class="nav-item">
       <a class="nav-link active" href="<?php echo base_url();?>home/index">
         <i class="fas fa-home"></i><br>
-        Home</a>
+        Crime Map</a>
     </li>
     <li class="nav-item">
       <a class="nav-link" href="<?php echo base_url();?>home/ongoing_crimes">
@@ -169,6 +170,12 @@
     Murder
   </label>
 </div>
+<div class="form-check mb-1">
+  <input class="form-check-input" name="type[]" type="checkbox" value="Fire Outbreak" id="defaultCheck8">
+  <label class="form-check-label" for="defaultCheck6">
+    Fire Outbreak
+  </label>
+</div>
 <div class="form-check">
   <input class="form-check-input" name="type[]" type="checkbox" value="others" id="defaultCheck7">
   <label class="form-check-label" for="defaultCheck7">
@@ -209,7 +216,10 @@ $(document).ready(function(){
 if(location!=='') {
 $('#go').trigger('click');
 }
-
+$('#all-time').on('click', function() {
+get_result();
+  $('#all').html('All Time');
+});
 $('#yesterday').on('click', function() {
   $('#start-date').val('yesterday');
   $('#end-date').val('today');
@@ -333,7 +343,7 @@ $('#loading-crime').hide();
   $('#records').html(crimes.length +' record');
 $('.close').trigger('click');
       const map = new google.maps.Map(document.getElementById("map"), {
-      zoom: 15,
+      zoom: 16,
       center: new google.maps.LatLng(5.028829, 7.978997),
       styles: [
         {
@@ -427,7 +437,7 @@ $('#go').on('click', function() {
   success:function(crimes) {
   $('#loading').hide();
     const map = new google.maps.Map(document.getElementById("map"), {
-    zoom: 15,
+    zoom: 16,
     center: new google.maps.LatLng(5.028829, 7.978997),
     styles: [
       {
@@ -451,12 +461,12 @@ $('#go').on('click', function() {
   //alert(report_id);
 
   if(loc==block) {
-  var contentType = block;
-  var blockType = '  ';
+  var contentType = ' ';
+  var blockType = block;
   var icon = '<?php echo base_url();?>template/assets/marker-pin.png';
 } else {
   var contentType = crimes[i].type;
-  var blockType = block;
+  var blockType = ' ';
   if(status=='saved') {
   var icon = '<?php echo base_url();?>template/assets/marker-black.png';
 } else {
@@ -490,6 +500,9 @@ $('#go').on('click', function() {
   //     window.location.href = '<?php echo base_url();?>home/view_crime/review/'+report_id;
   //   });
   //alert(marker['title']);
+  if(loc==block) {
+    infowindow.close();
+  }
   marker.addListener("click", () => {
   infowindow.close();
   window.location.href = '<?php echo base_url();?>home/view_crime/review/'+marker['title'];
@@ -512,7 +525,7 @@ function get_result() {
   dataType: 'JSON',
   success:function(crimes) {
     const map = new google.maps.Map(document.getElementById("map"), {
-    zoom: 15,
+    zoom: 16,
     center: new google.maps.LatLng(5.028829, 7.978997),
     styles: [
       {
@@ -524,6 +537,7 @@ function get_result() {
       }
     ]
     });
+    $('#records').html(crimes.length+' records');
    for (i = 0; i < crimes.length; i++) {
      var lat = parseFloat(crimes[i].latitude);
      var lng = parseFloat(crimes[i].longitude);

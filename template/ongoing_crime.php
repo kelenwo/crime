@@ -44,7 +44,7 @@
        <div class="col-auto" style="margin-left:0;">
          <form id="search_crime_reports" autocomplete="off">
          <label class="sr-only" for="inlineFormInputGroup">Search Crime, Location</label>
-         <div class="input-group mb-3 autocomplete">
+         <div class="input-group borders mb-3 autocomplete">
            <div class="input-group-prepend">
              <span class="input-group-text input-group-custom">
                <i class="fas fa-search"></i>
@@ -82,7 +82,7 @@
       <li class="nav-item">
         <a class="nav-link active" href="<?php echo base_url();?>home/index">
           <i class="fas fa-home"></i><br>
-          Home</a>
+          Crime Map</a>
       </li>
       <li class="nav-item">
         <a class="nav-link" href="<?php echo base_url();?>home/ongoing_crimes">
@@ -109,14 +109,17 @@
 </div>
 
 <div id="main-body">
+    <div class="row">
 <div class="panel">
+    <div class="col-md-12">
   <div class="panel-heading">
     <h4>Ongoing Crimes</h4>
   </div>
-  <div class="panel-body row">
-    <div class="col-md-12">
-
+</div>
+  <div class="panel-body">
+<div class="col-lg-12 col-md-12 row">
       <?php foreach($reports as $req): ?>
+<div class="col-lg-6 col-md-6">
 <div class="card mt-2">
   <div class="card-body">
     <span class="mb-1"><strong><?php echo $req['type'];?></strong></span>
@@ -132,6 +135,8 @@
 
 </div>
 </div>
+</div>
+
 <script>
 $(document).ready(function() {
   if (navigator.geolocation) {
@@ -165,10 +170,12 @@ $(document).ready(function() {
 </script>
 <?php endforeach;?>
 </div>
-
+</div>
 </div>
 <div id="map" style="display:none;"></div>
 
+</div>
+</div>
 </div>
 </div>
 

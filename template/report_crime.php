@@ -67,7 +67,7 @@
     <li class="nav-item">
       <a class="nav-link active" href="<?php echo base_url();?>home/index">
         <i class="fas fa-home"></i><br>
-        Home</a>
+        Crime Map</a>
     </li>
     <li class="nav-item">
       <a class="nav-link" href="<?php echo base_url();?>home/ongoing_crimes">

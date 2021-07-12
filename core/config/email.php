@@ -10,4 +10,3 @@ $config['charset']    = 'utf-8';
 $config['newline']    = "\r\n";
 $config['mailtype'] = 'html'; // or html
 $config['validation'] = FALSE;
-$config['priority'] = 1;

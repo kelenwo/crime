@@ -41,7 +41,8 @@
    <div class="mobile_nav">
      <span class="bars" data-trigger="navbar_main" id="show"><i class="fas fa-bars"></i></span>
      <span class="bars btn-close" id="hide" style="display:none"><i class="fas fa-bars"></i></span>
-     <span class="round bg-danger" style="float:right"><i class="fas fa-bell"></i></span>
+     <span class="round bg-danger" style="float:right"><a href="<?php echo base_url();?>dashboard/report_crime">
+       <i class="fas fa-bell"></i></a></span>
 
    <nav id="navbar_main" class="mobile-offcanvas navbar navbar-expand-lg  bg-light">
  <div class="navbar-collapse" id="navbarSupportedContent">
@@ -58,11 +59,12 @@
        <a class="nav-link" href="<?php echo base_url();?>dashboard/report_crime"><i class="fas fa-bell"></i> &nbsp; Report Crime</a>
      </li>
      <li class="nav-item">
-       <a class="nav-link" href="<?php echo base_url();?>dashboard/crime_reports"><i class="fas fa-home"></i> &nbsp; Your reports</a>
+       <a class="nav-link" href="<?php echo base_url();?>dashboard/crime_reports"><i class="far fa-address-book"></i> &nbsp; Your reports</a>
      </li>
      <li class="nav-item">
-       <a class="nav-link" href="#"><i class="fas fa-user"></i> &nbsp; Profile</a>
+       <a class="nav-link" href="<?php echo base_url();?>dashboard/about"><i class="fas fa-info-circle"></i> &nbsp; About</a>
      </li>
+
      <?php if(isset($name)):?>
    <?php if($rights=='administrator'):?>
      <li class="nav-item">
@@ -93,14 +95,15 @@
    </li>
    <li class="nav-item">
      <a class="nav-link" href="<?php echo base_url();?>dashboard/crime_reports">
-         <i class="fas fa-bell"></i><br>
+         <i class="far fa-address-book"></i><br>
          Your Reports</a>
    </li>
    <li class="nav-item">
-     <a class="nav-link" href="#">
-         <i class="far fa-user"></i><br>
-         Profile</a>
+     <a class="nav-link" href="<?php echo base_url();?>dashboard/about">
+         <i class="fas fa-info-circle"></i><br>
+         About</a>
    </li>
+
      <?php if(isset($name)):?>
    <?php if($rights=='administrator'):?>
      <li class="nav-item">
@@ -134,12 +137,13 @@
       <option value="Drugs/Alcohol Violation">Drugs/Alcohol Violation</option>
       <option value="Robbery">Robbery</option>
       <option value="Murder">Murder</option>
+      <option value="Fire Outbreak">Fire Outbreak</option>
       <option value="Others">Others</option>
     </select>
       </div>
 
       <div class="form-group autocomplete">
-        <label>Crime Scene</label>
+        <label>Crime Scene is closest to</label>
       <input name="location" id="location" type="text" class="form-control" placeholder="Search Scene">
       </div>
 
@@ -149,16 +153,29 @@
       </div>
       <div class="form-group">
         <label>Time</label>
-      <input name="time" type="time" value="<?php echo date('H:m:s');?>" class="form-control" placeholder="time">
+      <input name="time" type="time" value="<?php date_default_timezone_set("Africa/Lagos"); echo date('H:i:s');?>" class="form-control" placeholder="time">
       </div>
       <div class="form-group">
         <label>Latitude</label>
-      <input name="latitude" id="latitude" type="text" class="form-control" placeholder="Longitude">
+      <input name="latitude" id="latitude" type="text" class="form-control" placeholder="Latitude">
       </div>
       <div class="form-group">
         <label>Longitude</label>
-      <input name="longitude" id="longitude" type="text" class="form-control" placeholder="Latitude">
+      <input name="longitude" id="longitude" type="text" class="form-control" placeholder="Longitude">
       </div>
+      <div class="form-group">
+      <label for="">Attach Image</label>
+      <br><b id="loading-doc" style="color:green;"><i class="fas fa-spinner fa-spin"></i> Uploading file, please wait.</b>
+      <b id="success"></b>
+      <div class="input-group">
+        <div class="input-group-prepend">
+              <button id="uploadImg" class="btn btn-primary" type="button">&nbsp;&nbsp;
+                <i class="fas fa-upload fa-sm"></i> Select file&nbsp;&nbsp;&nbsp;
+              </button>
+            </div>
+<input type="text" id="img" class="form-control form-control-user small" placeholder="Attach image">
+<input type="hidden" name="crime_image" id="crime_image">
+            </div></div>
       <div class="form-group">
         <label>Description</label>
       <textarea cols="3" class="form-control" name="description" placeholder="Description (optional)"></textarea>
@@ -174,6 +191,9 @@
 <form id="latt">
   <input type="hidden" name="latitude" id="lat">
 </form>
+<form id="uploadDoc">
+<input type="file" name="doc" id="doc" style="visibility: hidden;">
+</form>
 </div>
 </div>
 <script async
@@ -182,6 +202,45 @@
 <script>
 $(document).ready(function() {
   $('#loading').hide();
+$('#loading-doc').hide();
+
+$('#uploadImg').on('click',function() {
+$('#doc').trigger('click');
+});
+
+  $('#doc').on('change',function() {
+    $('#loading-doc').show();
+  $('#uploadDoc').submit();
+  });
+
+  //Document 1
+  $('#uploadDoc').submit(function(e){
+    $('#loading-doc').show();
+                e.preventDefault();
+   $.ajax({
+       url:'<?php echo base_url();?>dashboard/do_upload',
+       type: 'POST',
+       data:new FormData(this),
+       processData:false,
+       contentType:false,
+       cache:false,
+       dataType: 'JSON',
+       async:false,
+       success: function(data){
+    $('#loading-doc').hide();
+    if(data.success=='true') {
+      $('#success').html('<b class="mb-1"><i class="far fa-check-square" style="color:green; font-size:14px;"> Image Uploaded successfully</i></b>')
+      $('#img').val(data.file_name);
+      $('#crime_image').val(data.file_name);
+      $('#confirm').removeAttr('disabled');
+    } else if(data.success=='false') {
+    $('#success').html('<i class="fa fa-info-circle" style="color:red;">'+data.msg+'</i>')
+    }
+        }
+            });
+         });
+
+
   $("#location").keyup(function(){
     $.ajax({
     type: "POST",
@@ -216,7 +275,7 @@ $(document).ready(function() {
   });
   });
   });
-
+ 
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(
       (position) => {

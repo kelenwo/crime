@@ -21,6 +21,17 @@ if(empty($this->session->email)) {
 
         }
 
+        public function about()
+        {
+             $data = $this->session->userdata();
+             $data['reports'] = $this->crime_model->get_crime_reports_ongoing();
+              //$data['review'] = $this->crime_model->get_crime_reports_all();
+             $data['title'] = "ABOUT - CRIME MAPPING SYSTEM";
+                // $this->load->view('head', $data);
+                $this->parser->parse('user_about', $data);
+
+        }
+
         public function crime_review($id)
         {
              $data = $this->session->userdata();
@@ -78,9 +89,53 @@ if(empty($this->session->email)) {
 
         }
 
+        public function do_upload(){
+      $type = $this->input->post('type');
+        $config['allowed_types']        = 'jpg|jpeg|png';
+        $config['max_size']             = 10000;
+        $config['upload_path']          = './uploads/images/';
+        $this->upload->initialize($config);
+              if($this->upload->do_upload('doc')){
+        $document = $this->upload->data('file_name');
+        $arr = array(
+          'success' => 'true',
+          'file_name' => $document,
+        );
+        echo json_encode($arr);
+              } else {
+                $msg = $this->upload->display_errors();
+                $arr = array(
+                  'success' => 'false',
+                  'msg' => $msg,
+                );
+                echo json_encode($arr);
+          }
+        }
+
         public function save_crime_report() {
             $data = $this->crime_model->save_crime_report();
+            $admin_email = $this->crime_model->get_mail_list();
             if($data==true) {
+
+              foreach($admin_email as $mail) {
+                $msg = '<h4>Distress Call:</h4><p>A crime incident identified with the following info has been reported.</p>
+                <p style="margin-bottom:3px;">Crime Type:&nbsp;&nbsp;'. $this->input->post("type").'
+                Closest To:&nbsp;&nbsp;'. $this->input->post("location").'<br>
+                Date:&nbsp;&nbsp;'. date("d F, Y", strtotime($this->input->post("date"))).'<br>
+                Time:&nbsp;&nbsp;'. date("h:i:s A", strtotime($this->input->post("time"))).'<br></p>
+                <h4>Reported By:</h4>
+                <p style="margin-bottom:3px;">Name:&nbsp;&nbsp;'. $this->input->post("report_by").'<br>
+                Email:&nbsp;&nbsp;'. $this->session->email.'<br>
+                Phone Number:&nbsp;&nbsp;'. $this->session->phone.'<br></p>
+                <p>Login to dashboard to view more informations about the crime. <br><i>Best regards</i></p>';
+
+                $this->email->from('no-reply@cms.com','Crime Mapping');
+                $this->email->to($mail['email']);
+                $this->email->subject('Crime Mapping - Crime Alert Reported');
+                $this->email->message($msg);
+                $this->email->send();
+              }
+
             echo 'true';
           } else {
             echo $data;

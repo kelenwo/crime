@@ -38,7 +38,7 @@
 <div id="menu">
   <div class="row">
     <div class="col-lg-5 col-md-5">
-      <div class="col-auto" style="margin-left:-5%;">
+      <div class="col-auto" style="margin-left:-5%; display:none;">
         <form id="search" method="post" action="<?php echo base_url('home/index');?>">
         <label class="sr-only" for="inlineFormInputGroup">Search Crime, Location</label>
         <div class="input-group mb-3">
@@ -68,7 +68,7 @@
     <li class="nav-item">
       <a class="nav-link active" href="<?php echo base_url();?>home/index">
         <i class="fas fa-home"></i><br>
-        Home</a>
+        Crime Map</a>
     </li>
     <li class="nav-item">
       <a class="nav-link" href="<?php echo base_url();?>home/ongoing_crimes">

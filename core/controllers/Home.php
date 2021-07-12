@@ -9,6 +9,10 @@ class Home extends CI_Controller {
               header('Location:'.base_url().'ucp/login/signin/return/'.str_replace('/','-',uri_string()));
             }
           }
+          if($this->session->rights !=='administrator') {
+
+              header('Location:'.base_url("dashboard/index"));
+          }
 }
         public function index()
         {
@@ -66,7 +70,7 @@ class Home extends CI_Controller {
         public function crime_reports()
         {
           $data = $this->session->userdata();
-          $data['reports'] = $this->crime_model->get_crime_reports();
+          $data['reports'] = $this->crime_model->get_crime_reports_all();
           $data['title'] = "REPORT CRIME- CRIME MAPPING SYSTEM";
                 // $this->load->view('head', $data);
                 $this->parser->parse('crime_reports', $data);
@@ -86,6 +90,7 @@ class Home extends CI_Controller {
           $data = $this->session->userdata();
           $get = $this->crime_model->get_users();
           $getAdmin = $this->crime_model->get_users_admin();
+          $getBlock = $this->crime_model->get_users_blocked();
           $arr = array();
           foreach($get as $res) {
             $rep = $this->crime_model->count_reports_user($res['name']);
@@ -128,9 +133,31 @@ class Home extends CI_Controller {
             array_push($arrn,$new);
           }
 
+          $b = array();
+          foreach($getBlock as $res) {
+            $rep = $this->crime_model->count_reports_user($res['name']);
+            $frep = $this->crime_model->count_false_reports_user($res['name']);
+            $rev = $this->crime_model->count_reviews_user($res['name']);
+            $new = array(
+                  'id' => $res['id'],
+                  'name' => $res['name'],
+                  'email' => $res['email'],
+                  'phone' => $res['phone'],
+                  'rights' => $res['rights'],
+                  'account_status' => $res['account_status'],
+                  'date' => $res['date'],
+                  'last_login' => $res['last_login'],
+                  'reports' => $rep,
+                  'false_reports' => $frep,
+                  'reviews' => $rev
+                   );
+            array_push($b,$new);
+          }
+
           //var_dump($arr);
           $data['users'] = $arr;
           $data['admin'] = $arrn;
+          $data['blocked'] = $b;
           $data['title'] = "Manage Users- CRIME MAPPING SYSTEM";
                 // $this->load->view('head', $data);
           $this->parser->parse('manage_users', $data);
@@ -138,9 +165,11 @@ class Home extends CI_Controller {
 
         public function view_crime($review, $id)
         {
-
+          $get = $this->crime_model->get_crime_reports_for_review($id);
+          $user = $this->crime_model->get_user_details($get->report_by);
           $data = $this->session->userdata();
-          $data['reports'] = get_object_vars($this->crime_model->get_crime_reports_for_review($id));
+          $data['user'] = $user[0];
+          $data['reports'] = get_object_vars($get);
           $data['reviews'] = $this->crime_model->get_crime_review($id);
           $data['reviews_count'] = $this->crime_model->count_crime_reviews($id);
           $data['title'] = "CRIME REVIEWS - CRIME MAPPING SYSTEM";
@@ -319,8 +348,10 @@ class Home extends CI_Controller {
             }
 
             public function update_crime_report() {
-            $update = $this->crime_model->update_crime_report();
-            echo $update;
+
+                $update = $this->crime_model->update_crime_report();
+                echo $update;
+
             }
 
             public function generate_record() {
@@ -370,6 +401,14 @@ class Home extends CI_Controller {
                             $mpdf->WriteHTML($html);
                             $mpdf->Output(mb_strtoupper('Crime_report.pdf','D'));
                                //unlink($params['savename']);
+              }
+              //handles delete button
+              public function delete_item() {
+              $del = $this->crime_model->delete_item();
+              if($del==true) {
+              echo 'true';
+              } else {
+              echo $del;}
               }
 
       }

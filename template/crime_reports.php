@@ -17,7 +17,10 @@
  <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
  <script src="<?php echo base_url();?>template/assets/js/jquery.min.js"></script>
   <script src="<?php echo base_url();?>template/assets/js/custom_map.js"></script>
-
+  <script src="<?php echo base_url();?>template/vendor/datatables/jquery.dataTables.min.js"></script>
+  <script src="<?php echo base_url();?>template/vendor/datatables/dataTables.bootstrap4.min.js"></script>
+  <script src="<?php echo base_url();?>template/assets/js/datatables-demo.js"></script>
+    <link href="<?php echo base_url();?>template/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
 
   <div id="head">
     <div class="col-lg-12 col-md-12 row">
@@ -41,7 +44,7 @@
       <div class="col-auto" style="margin-left:-5%;">
         <form id="search" method="post" action="<?php echo base_url('home/crime_search/location');?>">
         <label class="sr-only" for="inlineFormInputGroup">Search Crime, Location</label>
-        <div class="input-group mb-3">
+        <div class="input-group borders mb-3">
           <div class="input-group-prepend">
             <span class="input-group-text input-group-custom">
               <i class="fas fa-search"></i>
@@ -68,7 +71,7 @@
     <li class="nav-item">
       <a class="nav-link active" href="<?php echo base_url();?>home/index">
         <i class="fas fa-home"></i><br>
-        Home</a>
+        Crime Map</a>
     </li>
     <li class="nav-item">
       <a class="nav-link" href="<?php echo base_url();?>home/ongoing_crimes">
@@ -76,7 +79,7 @@
           Ongoing Crimes</a>
     </li>
     <li class="nav-item">
-      <a class="nav-link" href="#">
+      <a class="nav-link" href="<?php echo base_url('generate_report');?>">
           <i class="far fa-file-export"></i><br>
           Generate Report</a>
     </li>
@@ -97,8 +100,8 @@
 <div id="main-body">
 <div class="panel">
   <div class="panel-heading">
-    <h4 style="display:inline-block;">YOUR REPORTS &nbsp;
-      |&nbsp;&nbsp;</h4><h4 style="display:inline-block;"><a href="<?php echo base_url();?>report_crime">Report Crime</a></h4>
+    <h4 style="display:inline-block;">CRIME REPORTS &nbsp;
+      </h4>
   </div>
   <div class="panel-body">
     <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
@@ -119,7 +122,7 @@
 <?php  foreach($reports as $req): ?>
 <tr>
 <td><?php echo $i++.'.';?>
-<td><a href="#viewreport-<?php echo $req['id'];?>" data-toggle="modal"><?php echo $req['type']; ?></a></td>
+<td><?php echo $req['type']; ?></td>
 <td><?php echo $req['description']; ?></td>
   <td><?php echo $req['location']; ?></td>
   <td><?php echo date("d F Y", strtotime($req['date']));?></td>

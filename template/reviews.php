@@ -95,11 +95,51 @@
 
 <div id="main-body">
 <div class="panel">
-  <div class="panel-heading">
-    <h4>Reviews</h4>
-  </div>
   <div class="panel-body row">
-    <div class="col-md-8">
+
+    <div class="col-md-6">
+      <div class="card">
+<div class="card-top" >
+  <?php if(!empty($reports['crime_image'])):?>
+  <div><img src="<?=base_url('uploads/images/'.$reports['crime_image'])?>" height="400px" width="100%"></div>
+  <div class="m-1 center text-white" style="margin-top:30% !important;">
+<?php else: ?>
+  <div class="m-1 center text-white" style="margin-top:30% !important;">
+    <?php endif; ?>
+  <div class="mr-2 mb-2" style="display:inline-block;">
+    <span class="fa-stack text-info fa-2x" style="font-size: 1.5em !important;">
+    <i class="fas fa-circle fa-stack-2x"></i>
+    <i class="fas fa-location-arrow fa-stack-1x fa-inverse"></i>
+    </span></div>
+  <h3 style="display:inline-block"><?php echo $reports['type'];?></h3>
+<hr>
+  <span class="f-right"><?php echo $reports['location'];?></span><br>
+  <span class="f-right"><?php echo date("d F, Y", strtotime($reports['date']));?> @ <?php echo date("h:i:s a", strtotime($reports['time']));?></span><br>
+</div>
+</div>
+  <div class="card-body">
+    <h5 class="card-title">Reporter:</h5></p>
+    <p><b>Name:</b>  <?= $user['name'];?></p>
+    <p><b>Email:</b>  <?= $user['email'];?></p>
+    <p><b>Phone number:</b>  <?= $user['phone'];?></p>
+    <h5 class="card-title">Description</h5>
+    <?php if(empty($reports['description'])): ?>
+      <p class="card-text text-center">No description Added.</p>
+        <?php else: ?>
+    <p class="card-text"><?php echo $reports['description'];?></p>
+  <?php endif;?>
+    <div class="row">
+    <div class="col-md-6 col-sm-6 col-6">
+      <button id="save" type="button" class="btn <?php if($reports['status']=='saved' && $reports['verify']=='active') {echo 'btn-success';} else{ echo 'btn-outline-success';} ?> my-2 my-sm-0 btn-block" <?php if($reports['status']=='saved') {echo 'disabled';} ?>>
+      <strong>Save <i id="loading-save" class="fas fa-cog fa-spin"></i></strong></button></div>
+    <div class="col-md-6 col-sm-6 col-6">
+      <button id="blacklist" type="button" class="btn <?php if($reports['status']=='saved' && $reports['verify']=='blacklist') {echo 'btn-danger';} else{ echo 'btn-outline-danger';} ?> my-2 my-sm-0 btn-block" <?php if($reports['status']=='saved') {echo 'disabled';}?>>
+      <strong>Blacklist <i id="loading-blacklist" class="fa fa-cog fa-spin"></i></strong></button></div>
+    </div>
+  </div>
+</div>
+    </div>
+    <div class="col-md-6">
     <ul class="nav nav-tabs nav-justified">
   <li class="nav-item">
     <a class="nav-link  active" href="#"><h5>REVIEWS</h5></a>
@@ -150,39 +190,6 @@ endif;?>
 
 
 </div>
-    <div class="col-md-4">
-      <div class="card">
-<div class="card-top">
-  <div class="m-3 center text-white">
-  <div class="mr-2 mb-2" style="display:inline-block;">
-    <span class="fa-stack text-info fa-2x" style="font-size: 1.5em !important;">
-    <i class="fas fa-circle fa-stack-2x"></i>
-    <i class="fas fa-location-arrow fa-stack-1x fa-inverse"></i>
-    </span></div>
-  <h4 style="display:inline-block"><?php echo $reports['type'];?></h4>
-<hr>
-  <span class="f-right"><?php echo $reports['location'];?></span><br>
-  <span class="f-right"><?php echo date("d F, Y", strtotime($reports['date']));?> @ <?php echo date("h:i:s a", strtotime($reports['time']));?></span><br>
-</div>
-</div>
-  <div class="card-body">
-    <h5 class="card-title">Description</h5>
-    <?php if(empty($reports['description'])): ?>
-      <p class="card-text text-center">No description Added.</p>
-        <?php else: ?>
-    <p class="card-text"><?php echo $reports['description'];?></p>
-  <?php endif;?>
-    <div class="row">
-    <div class="col-md-6 col-sm-6 col-6">
-      <button id="save" type="button" class="btn <?php if($reports['status']=='saved' && $reports['verify']=='active') {echo 'btn-success';} else{ echo 'btn-outline-success';} ?> my-2 my-sm-0 btn-block" <?php if($reports['status']=='saved') {echo 'disabled';} ?>>
-      <strong>Save <i id="loading-save" class="fas fa-cog fa-spin"></i></strong></button></div>
-    <div class="col-md-6 col-sm-6 col-6">
-      <button id="blacklist" type="button" class="btn <?php if($reports['status']=='saved' && $reports['verify']=='blacklist') {echo 'btn-danger';} else{ echo 'btn-outline-danger';} ?> my-2 my-sm-0 btn-block" <?php if($reports['status']=='saved') {echo 'disabled';}?>>
-      <strong>Blacklist <i id="loading-blacklist" class="fa fa-cog fa-spin"></i></strong></button></div>
-    </div>
-  </div>
-</div>
-    </div>
 <form id="form">
   <input type="hidden" name="report_id" value="<?php echo $reports['report_id'];?>">
     <input type="hidden" name="verify" id="verify">

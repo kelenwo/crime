@@ -17,7 +17,9 @@
  <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
  <script src="<?php echo base_url();?>template/assets/js/jquery.min.js"></script>
  <script src="<?php echo base_url();?>template/assets/js/custom_map.js"></script>
-
+ <script async
+     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAj5lKUoRNwRa0maEalb4F-ATTiNzSwK1g&libraries=places&callback=initMap">
+ </script>
 
 <div id="head">
 <b>CRIME MAPPING SYSTEM</b>
@@ -36,7 +38,7 @@
     <form id="login">
   <input type="email" name="email" class="form-control form-noborder" placeholder="Email">
   <input type="password" name="password" class="form-control form-noborder" placeholder="Password">
-  <button type="button"id="submit" class="btn btn-primary btn-block login-btn">Login <i id="loading" class="fas fa-cog fa-spin"></i></button>
+  <button type="button" id="submit" class="btn btn-primary btn-block login-btn">Login <i id="loading" class="fas fa-cog fa-spin"></i></button>
 </form>
 </div>
 <p class="mt-3"> Forgotten Password? <a href="<?php echo base_url('ucp/login/password_reset');?>">Password Reset</a></p>
@@ -49,9 +51,7 @@
 <div id="main-login">
 <div id="map"></div>
 </div>
-<script async
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAj5lKUoRNwRa0maEalb4F-ATTiNzSwK1g&libraries=places&callback=initMap">
-</script>
+
 <script>
 $(document).ready(function () {
   $('#loading').hide();

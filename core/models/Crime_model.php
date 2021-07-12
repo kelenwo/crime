@@ -26,7 +26,21 @@ Class Crime_model Extends CI_model {
         }
     }
 
+    public function get_mail_list() {
+      $this->db->select('email');
+      $this->db->where('rights','administrator');
+      $query = $this->db->get('users');
+      return $query->result_array();
+
+    }
     public function get_users() {
+      $query = $this->db->get('users');
+      return $query->result_array();
+    }
+
+    public function get_user_details($val) {
+      $this->db->where('name',$val);
+      $this->db->limit(1);
       $query = $this->db->get('users');
       return $query->result_array();
     }
@@ -38,6 +52,7 @@ Class Crime_model Extends CI_model {
     }
 
     public function get_users_blocked() {
+      $this->db->where('account_status','blocked');
       $query = $this->db->get('users');
       return $query->result_array();
     }
@@ -235,7 +250,7 @@ Class Crime_model Extends CI_model {
 
   public function count_false_reports_user($name) {
   $this->db->where('report_by',$name);
-  $this->db->where('verify','false');
+  $this->db->where('verify','blacklist');
   $this->db->from('crime_report');
   return $this->db->count_all_results();
   }
@@ -255,7 +270,7 @@ Class Crime_model Extends CI_model {
 
   public function update_user() {
   $this->db->where('id',$this->input->post('id'));
-  $query = $this->db->update('users', $this->input->post());
+  $query = $this->db->update('users',$this->input->post());
   if($query) {
   return true;
   } else {
@@ -308,6 +323,30 @@ if($query) {
 return true;
 } else {
  return mysqli_error();
+}
+
+}
+
+public function delete_item() {
+  $type = $this->input->post('type');
+
+  if($type=="crime") {
+  $this->db->where('id',$this->input->post('id'));
+  $query = $this->db->delete('crime_report');
+  if($query) {
+    return true;
+  } else {
+    return mysqli_error();
+  }
+}
+  elseif($type=="users") {
+  $this->db->where('id',$this->input->post('id'));
+  $query = $this->db->delete('users');
+  if($query) {
+    return true;
+  } else {
+    return mysqli_error();
+  }
 }
 
 }

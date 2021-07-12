@@ -42,7 +42,8 @@
    <div class="mobile_nav">
      <span class="bars" data-trigger="navbar_main" id="show"><i class="fas fa-bars"></i></span>
      <span class="bars btn-close" id="hide" style="display:none"><i class="fas fa-bars"></i></span>
-     <span class="round bg-danger" style="float:right"><i class="fas fa-bell-on"></i></span>
+     <span class="round bg-danger" style="float:right"><a href="<?php echo base_url();?>dashboard/report_crime">
+       <i class="fas fa-bell"></i></a></span>
 
    <nav id="navbar_main" class="mobile-offcanvas navbar navbar-expand-lg  bg-light">
  <div class="navbar-collapse" id="navbarSupportedContent">
@@ -59,11 +60,12 @@
        <a class="nav-link" href="<?php echo base_url();?>dashboard/report_crime"><i class="fas fa-bell"></i> &nbsp; Report Crime</a>
      </li>
      <li class="nav-item">
-       <a class="nav-link" href="<?php echo base_url();?>dashboard/crime_reports"><i class="fas fa-home"></i> &nbsp; Your reports</a>
+       <a class="nav-link" href="<?php echo base_url();?>dashboard/crime_reports"><i class="far fa-address-book"></i> &nbsp; Your reports</a>
      </li>
      <li class="nav-item">
-       <a class="nav-link" href="#"><i class="fas fa-user"></i> &nbsp; Profile</a>
+       <a class="nav-link" href="<?php echo base_url();?>dashboard/about"><i class="fas fa-info-circle"></i> &nbsp; About</a>
      </li>
+
      <?php if(isset($name)):?>
    <?php if($rights=='administrator'):?>
      <li class="nav-item">
@@ -94,14 +96,15 @@
    </li>
    <li class="nav-item">
      <a class="nav-link" href="<?php echo base_url();?>dashboard/crime_reports">
-         <i class="fas fa-bell"></i><br>
+         <i class="far fa-address-book"></i><br>
          Your Reports</a>
    </li>
    <li class="nav-item">
-     <a class="nav-link" href="#">
-         <i class="far fa-user"></i><br>
-         Profile</a>
+     <a class="nav-link" href="<?php echo base_url();?>dashboard/about">
+         <i class="fas fa-info-circle"></i><br>
+         About</a>
    </li>
+
      <?php if(isset($name)):?>
    <?php if($rights=='administrator'):?>
      <li class="nav-item">
