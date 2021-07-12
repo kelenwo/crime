@@ -275,7 +275,7 @@ $('#doc').trigger('click');
   });
   });
   });
- 
+  
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(
       (position) => {
