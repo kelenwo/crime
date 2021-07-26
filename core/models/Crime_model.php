@@ -38,6 +38,12 @@ Class Crime_model Extends CI_model {
       return $query->result_array();
     }
 
+    public function get_users_all() {
+      $this->db->where('account_status !=','blocked');
+      $query = $this->db->get('users');
+      return $query->result_array();
+    }
+
     public function get_user_details($val) {
       $this->db->where('name',$val);
       $this->db->limit(1);

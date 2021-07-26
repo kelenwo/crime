@@ -260,7 +260,10 @@
                <option value="administrator" <?php if($req['rights']=='administrator') {echo 'selected';};?>>Administrator</option>
              </select></form></div>
        </div></div>
-
+       <form id="b_users-<?php echo $req['id'];?>">
+       <input type="hidden" name="id" value="<?php echo $req['id'];?>">
+       <input type="hidden" name="account_status" value="blocked">
+       </form>
          <div class="col-sm-5 col-md-5 ml-4 mt-3">
        <div class="text-sm text-primary text-capitalize mb-2"><small class="text-success">Mobile Number:</small><br>
      <small><?php echo $req['phone'];?></small></div>
@@ -290,10 +293,7 @@
   <!-- Edituser modal end -->
 <!-- delete contract -->
 </tr>
-<form id="b_users-<?php echo $req['id'];?>">
-<input type="hidden" name="id" value="<?php echo $req['id'];?>">
-<input type="hidden" name="account_status" value="blocked">
-</form>
+
 <script>
 $(document).ready(function() {
 
@@ -502,7 +502,10 @@ alert(data);
              <option value="administrator" <?php if($req['rights']=='administrator') {echo 'selected';};?>>Administrator</option>
            </select></form></div>
      </div></div>
-
+     <form id="b_admin-<?php echo $req['id'];?>">
+     <input type="hidden" name="id" value="<?php echo $req['id'];?>">
+     <input type="hidden" name="account_status" value="blocked">
+     </form>
        <div class="col-sm-5 col-md-5 ml-4 mt-3">
      <div class="text-sm text-primary text-capitalize mb-2"><small class="text-success">Mobile Number:</small><br>
    <small><?php echo $req['phone'];?></small></div>
@@ -531,10 +534,7 @@ alert(data);
 <!-- Edituser modal end -->
 <!-- delete contract -->
 </tr>
-<form id="b_admin-<?php echo $req['id'];?>">
-<input type="hidden" name="id" value="<?php echo $req['id'];?>">
-<input type="hidden" name="account_status" value="blocked">
-</form>
+
 <script>
 $(document).ready(function() {
 

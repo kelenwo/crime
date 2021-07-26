@@ -16,6 +16,7 @@
   </head>
  <script src="<?php echo base_url();?>template/assets/js/jquery.min.js"></script>
     <script src="<?php echo base_url();?>template/assets/js/fa.js"></script>
+       <script src="<?php echo base_url();?>template/assets/js/bootstrap.bundle.min.js"></script>
 
     <div id="head">
       <div class="col-lg-12 col-md-12 row">
@@ -92,12 +93,56 @@
     </div>
   </div>
 
+  <!-- view user modal -->
+  <div class="modal fade" id="viewb" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
 
+    <div class="modal-content" style="font-size: 1.2em;">
+
+      <div class="modal-body">
+          <form id="contact-form">
+  <div class="col-sm-12 col-md-12 card">
+  <div class="card-body" style="margin: -5px!important;">
+  <div class="row" style="font-size:20px !important;">
+
+    <div class="form-group col-md-12">
+      <label>Subject</label>
+      <input type="text" name="subject" placeholder="Subject" value="Crime Mapping - Crime Reported (<?php echo $reports['type'];?>)" class="form-control">
+    </div>
+
+    <div class="form-group col-md-12">
+      <label>Additional Message</label>
+      <textarea rows="3" name="body" placeholder="Include Additional message if any." class="form-control"></textarea>
+    </div>
+    <input type="hidden" name="date" value="<?= $reports['date'] ?>">
+    <input type="hidden" name="time" value="<?= $reports['time'] ?>">
+    <input type="hidden" name="location" value="<?= $reports['location'] ?>">
+    <input type="hidden" name="type" value="<?= $reports['type'] ?>">
+
+      </div>
+    </div>
+      </div>
+        </form>
+  <!-- General Information end -->
+
+    </div>
+
+      <div class="modal-footer">
+        <div class="form-group text-center center">
+          <button class="btn pl-3 pr-3 btn-success" id="send"> Send Message <i id="loading-send" class="fas fa-cog fa-spin"></i></button>
+          <button class="btn pl-3 pr-3 btn-info" type="button" data-dismiss="modal" aria-label="Close"><i class="fas fa-times"></i> &nbsp;Close</button>
+       </div>
+      </div>
+    </div>
+  </div>
+  </div>
+  <!-- view user modal end -->
 <div id="main-body">
 <div class="panel">
   <div class="panel-body row">
-
     <div class="col-md-6">
+      <a href="#viewb" data-toggle="modal" class="btn btn-success btn-block mb-1" id="contact"> <i class="far fa-envelope"></i> Contact Nearby Police</a>
+
       <div class="card">
 <div class="card-top" >
   <?php if(!empty($reports['crime_image'])):?>
@@ -199,6 +244,7 @@ endif;?>
 </div>
 <script>
 $('#loading-save').hide();
+$('#loading-send').hide();
 $('#loading-blacklist').hide();
 
 $('#save').on('click', function() {
@@ -253,4 +299,23 @@ $('#blacklist').on('click', function() {
   });
 });
 
+$('#send').on('click', function() {
+  $('#loading-send').show();
+  $.ajax({
+  url: '<?php echo base_url('home/contact_police');?>',
+  data: $('#contact-form').serialize(),
+  type: 'POST',
+  dataType: 'JSON',
+  success:function(data) {
+  $('#loading-send').hide();
+      if(data==1) {
+      alert('Report have been sent successfully');
+      window.location.href = '<?php echo $_SERVER['PHP_SELF'];?>';
+        }
+         else {
+   alert(data);
+ }
+}
+  });
+});
 </script>

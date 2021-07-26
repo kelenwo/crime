@@ -88,7 +88,7 @@ class Home extends CI_Controller {
         public function manage_users()
         {
           $data = $this->session->userdata();
-          $get = $this->crime_model->get_users();
+          $get = $this->crime_model->get_users_all();
           $getAdmin = $this->crime_model->get_users_admin();
           $getBlock = $this->crime_model->get_users_blocked();
           $arr = array();
@@ -410,5 +410,26 @@ class Home extends CI_Controller {
               } else {
               echo $del;}
               }
+
+              public function contact_police() {
+
+                      $msg = '<h4>Distress Call:</h4><p>A crime incident identified with the following info has been reported.</p>
+                      <p style="margin-bottom:3px;">Crime Type:&nbsp;&nbsp;'. $this->input->post("type").'
+                      Closest To:&nbsp;&nbsp;'. $this->input->post("location").'<br>
+                      Date:&nbsp;&nbsp;'. date("d F, Y", strtotime($this->input->post("date"))).'<br>
+                      Time:&nbsp;&nbsp;'. date("h:i:s A", strtotime($this->input->post("time"))).'<br></p>
+                      ';
+
+                      $this->email->from('no-reply@cms.com','Crime Mapping');
+                      $this->email->to('kelenwo68@gmail.com');
+                      $this->email->subject($this->input->post("subject"));
+                      $this->email->message($msg);
+                      $send = $this->email->send();
+                      if($send) {
+                        echo json_encode(1);
+                      } else {
+                        echo json_encode($send);
+                      }
+                    }
 
       }
