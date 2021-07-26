@@ -130,7 +130,7 @@
   <div class="card-body">
     <form id="review">
     <span class="mb-1"><strong><?php echo $reports['type'];?></strong></span>
-    <span class="f-right">4 metres away</span><br>
+    <span class="f-right"><span id="id"></span> metres away</span><br>
 
       <span class="mb-1"><strong><i class="fas fa-map-marker-alt text-danger"></i> <?php echo $reports['location'];?></strong></span>
       <span class="f-right "><?php echo $reports['date'];?> @ <?php echo $reports['time'];?></span>
@@ -164,6 +164,38 @@
 
 </div>
 </div>
+
+<script>
+$(document).ready(function() {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const pos = {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude,
+        };
+          var lat2 = position.coords.latitude;
+          var lng2 = position.coords.longitude;
+          var lat1 = <?php echo $req['latitude'];?>;
+          var lng1 = <?php echo $req['longitude'];?>;
+        var distance = Math.round(haversine_distance(lat1,lat2,lng1,lng2));
+        //alert(distance);
+        $('#id').html(distance);
+
+      },
+
+      () => {
+        handleLocationError(true, infoWindow, map.getCenter());
+      }
+    );
+
+  } else {
+    // Browser doesn't support Geolocation
+    handleLocationError(false, infoWindow, map.getCenter());
+  }
+
+});
+</script>
 <script async
     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAj5lKUoRNwRa0maEalb4F-ATTiNzSwK1g&libraries=places&callback=initMap">
 </script>

@@ -35,7 +35,8 @@
   <button type="button"id="submit" class="btn btn-primary btn-block login-btn">Login <i id="loading" class="fas fa-cog fa-spin"></i></button>
 </form>
 </div>
-<p class="mt-3"> Dont have an Account? <a href="<?php echo base_url('home/ucp/register');?>">REGISTER HERE</a></p>
+<p class="mt-3"> Forgotten Password? <a href="<?php echo base_url('ucp/login/password_reset');?>">Password Reset</a></p>
+<p class="mt-3"> Dont have an Account? <a href="<?php echo base_url('ucp/login/signup');?>">REGISTER HERE</a></p>
 </div>
 </div>
 </div>
